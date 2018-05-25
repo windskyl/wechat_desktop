@@ -11,33 +11,36 @@ import org.json.JSONObject;
 import com.rc.tasks.HttpPostTask;
 import com.rc.tasks.HttpResponseListener;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Created by song on 08/06/2017.
  */
 public class LoginFrame extends JFrame
 {
-    private static final int windowWidth = 300;
+    private static final int windowWidth = 280;
     private static final int windowHeight = 400;
+
+    private static final int QR_WIDTH = 210;
 
     private JPanel controlPanel;
     private JLabel closeLabel;
-    private JPanel editPanel;
-    private RCTextField usernameField;
-    private RCPasswordField passwordField;
-    private RCButton loginButton;
-    private JLabel statusLabel;
     private JLabel titleLabel;
+
+    private JLabel imageLabel; // 显示二维码
+    private JLabel tipLabel; // 显示提示信息
 
     private static Point origin = new Point();
 
     private SqlSession sqlSession;
-    private CurrentUserService currentUserService ;
-    private String username;
+    private CurrentUserService currentUserService;
 
 
     public LoginFrame()
@@ -52,11 +55,6 @@ public class LoginFrame extends JFrame
     public LoginFrame(String username)
     {
         this();
-        this.username = username;
-        if (username != null && !username.isEmpty())
-        {
-            usernameField.setText(username);
-        }
     }
 
     private void initService()
@@ -74,7 +72,8 @@ public class LoginFrame extends JFrame
 
 
         controlPanel = new JPanel();
-        controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        //controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        controlPanel.setLayout(new BorderLayout());
         //controlPanel.setBounds(0,5, windowWidth, 30);
 
         closeLabel = new JLabel();
@@ -83,41 +82,50 @@ public class LoginFrame extends JFrame
         //closeLabel.setPreferredSize(new Dimension(30,30));
         closeLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        titleLabel = new JLabel();
-        titleLabel.setText("登  录");
-        titleLabel.setFont(FontUtil.getDefaultFont(16));
+        titleLabel = new RCTextLabel("微信", Colors.FONT_GRAY_DARKER);
 
 
-        editPanel = new JPanel();
-        editPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
+        imageLabel = new JLabel();
+        imageLabel.setPreferredSize(new Dimension(QR_WIDTH, QR_WIDTH));
+        imageLabel.setIcon(getQrCode());
 
-        Dimension textFieldDimension = new Dimension(200, 35);
-        usernameField = new RCTextField();
-        usernameField.setPlaceholder("用户名");
-        usernameField.setPreferredSize(textFieldDimension);
-        usernameField.setFont(FontUtil.getDefaultFont(14));
-        usernameField.setForeground(Colors.FONT_BLACK);
-        usernameField.setMargin(new Insets(0, 15, 0, 0));
-
-        passwordField = new RCPasswordField();
-        passwordField.setPreferredSize(textFieldDimension);
-        passwordField.setPlaceholder("密码");
-        //passwordField.setBorder(new RCBorder(RCBorder.bottom, Colors.LIGHT_GRAY));
-        passwordField.setFont(FontUtil.getDefaultFont(14));
-        passwordField.setForeground(Colors.FONT_BLACK);
-        passwordField.setMargin(new Insets(0, 15, 0, 0));
-
-
-        loginButton = new RCButton("登 录", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
-        loginButton.setFont(FontUtil.getDefaultFont(14));
-        loginButton.setPreferredSize(new Dimension(200, 40));
-
-        statusLabel = new JLabel();
-        statusLabel.setForeground(Colors.RED);
-        statusLabel.setText("密码不正确");
-        statusLabel.setVisible(false);
+        tipLabel = new RCTextLabel("请使用微信扫一扫以登录");
+        tipLabel.setForeground(Colors.FONT_GRAY_DARKER);
 
         setIconImage(IconUtil.getIcon(this, "/image/ic_launcher.png").getImage());
+    }
+
+    private ImageIcon getQrCode()
+    {
+        try
+        {
+            // 获取UUID
+            String ret = HttpUtil.get(Urls.UUID);
+            String uuid = parseUUID(ret);
+            ImageIcon qrCode = new ImageIcon(new URL(Urls.QR_CODE + uuid));
+            qrCode.setImage(qrCode.getImage().getScaledInstance(QR_WIDTH, QR_WIDTH, Image.SCALE_SMOOTH));
+            return qrCode;
+
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 解析UUID
+     *
+     * @param ret window.QRLogin.code = 200; window.QRLogin.uuid = "oeApJlhU2A==";
+     * @return
+     */
+    private String parseUUID(String ret)
+    {
+        if (ret.contains("200"))
+        {
+            return ret.substring(ret.indexOf("\"") + 1, ret.length() - 2);
+        }
+        return null;
     }
 
     private void initView()
@@ -125,33 +133,23 @@ public class LoginFrame extends JFrame
         JPanel contentPanel = new JPanel();
         contentPanel.setBorder(new LineBorder(Colors.LIGHT_GRAY));
         contentPanel.setLayout(new GridBagLayout());
+        contentPanel.setBackground(Colors.WINDOW_BACKGROUND);
 
-        controlPanel.add(closeLabel);
+        controlPanel.add(titleLabel, BorderLayout.WEST);
+        controlPanel.add(closeLabel, BorderLayout.EAST);
 
         if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
             setUndecorated(true);
-            contentPanel.add(controlPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0, 0, 0));
+            contentPanel.add(controlPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(8, 8, 5, 8));
         }
-
-        JPanel titlePanel = new JPanel();
-        titlePanel.add(titleLabel);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridBagLayout());
-        buttonPanel.add(loginButton, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(10, 0, 0, 0));
-
-        editPanel.add(usernameField);
-        editPanel.add(passwordField);
-        editPanel.add(buttonPanel);
-
-        editPanel.add(statusLabel);
-
 
 
         add(contentPanel);
-        contentPanel.add(titlePanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 10, 0, 10));
-        contentPanel.add(editPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 10).setInsets(10, 10, 0, 10));
+        contentPanel.add(imageLabel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 10).setInsets(25, 35, 0, 35));
+        contentPanel.add(tipLabel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 20).setInsets(0, 35, 25, 35));
+
+
     }
 
     /**
@@ -214,132 +212,5 @@ public class LoginFrame extends JFrame
                 }
             });
         }
-
-        loginButton.addMouseListener(new AbstractMouseListener()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                if (loginButton.isEnabled())
-                {
-                    doLogin();
-                }
-
-                super.mouseClicked(e);
-            }
-        });
-
-        KeyListener keyListener = new KeyListener()
-        {
-            @Override
-            public void keyTyped(KeyEvent e)
-            {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e)
-            {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER)
-                {
-                    doLogin();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e)
-            {
-
-            }
-        };
-        usernameField.addKeyListener(keyListener);
-        passwordField.addKeyListener(keyListener);
-    }
-
-    private void doLogin()
-    {
-        String name = usernameField.getText();
-        String pwd = new String(passwordField.getPassword());
-
-        if (name == null || name.isEmpty())
-        {
-            showMessage("请输入用户，注意首字母可能为大写");
-        }
-        else if (pwd == null || pwd.isEmpty())
-        {
-            showMessage("请输入密码");
-        }
-        else
-        {
-            statusLabel.setVisible(false);
-
-            loginButton.setEnabled(false);
-            usernameField.setEditable(false);
-            passwordField.setEditable(false);
-            HttpPostTask task = new HttpPostTask();
-            task.setListener(new HttpResponseListener<JSONObject>()
-            {
-                @Override
-                public void onSuccess(JSONObject ret)
-                {
-                    processLoginResult(ret);
-                }
-
-                @Override
-                public void onFailed()
-                {
-                    showMessage("登录失败，请检查网络设置");
-                    loginButton.setEnabled(true);
-                    usernameField.setEditable(true);
-                    passwordField.setEditable(true);
-                }
-            });
-
-            task.addRequestParam("username", usernameField.getText());
-            task.addRequestParam("password", new String(passwordField.getPassword()));
-            task.execute(Launcher.HOSTNAME + "/api/v1/login");
-        }
-    }
-
-    private void processLoginResult(JSONObject ret)
-    {
-        if (ret.get("status").equals("success"))
-        {
-
-            JSONObject data = ret.getJSONObject("data");
-            String authToken = data.getString("authToken");
-            String userId = data.getString("userId");
-
-            CurrentUser currentUser = new CurrentUser();
-            currentUser.setUserId(userId);
-            currentUser.setAuthToken(authToken);
-            currentUser.setRawPassword(new String(passwordField.getPassword()));
-            currentUser.setPassword(PasswordUtil.encryptPassword(currentUser.getRawPassword()));
-            currentUser.setUsername(usernameField.getText());
-            currentUserService.insertOrUpdate(currentUser);
-
-            this.dispose();
-
-            MainFrame frame = new MainFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
-        }
-        else
-        {
-            showMessage("用户不存在或密码错误");
-            loginButton.setEnabled(true);
-            usernameField.setEditable(true);
-            passwordField.setEditable(true);
-        }
-
-    }
-
-    private void showMessage(String message)
-    {
-        if (!statusLabel.isVisible())
-        {
-            statusLabel.setVisible(true);
-        }
-
-        statusLabel.setText(message);
     }
 }

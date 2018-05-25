@@ -85,7 +85,7 @@ public class Launcher
             System.out.println("检查更新中...");
 
             // 检查更新
-            checkUpdate();
+            //checkUpdate();
         }
         else
         {
