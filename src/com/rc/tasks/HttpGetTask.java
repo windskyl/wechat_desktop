@@ -10,6 +10,15 @@ import java.io.IOException;
  */
 public class HttpGetTask extends HttpTask
 {
+    public HttpGetTask()
+    {
+    }
+
+    public HttpGetTask(HttpResponseListener listener)
+    {
+        super(listener);
+    }
+
     @Override
     public void execute(String url)
     {
@@ -21,11 +30,23 @@ public class HttpGetTask extends HttpTask
                 try
                 {
                     String ret = HttpUtil.get(url, headers, requestParams);
-                    JSONObject retJson = new JSONObject(ret);
-                    if (listener != null)
+                    if (ret != null && !ret.isEmpty())
                     {
-                        listener.onSuccess(retJson);
+                        if (ret.trim().startsWith("{"))
+                        {
+                            JSONObject retJson = new JSONObject(ret);
+                            if (listener != null)
+                            {
+                                listener.onSuccess(retJson);
+                            }
+                        }
+                        else
+                        {
+                            listener.onSuccess(ret);
+                        }
+
                     }
+
                 }
                 catch (IOException e)
                 {

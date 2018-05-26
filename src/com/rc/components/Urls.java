@@ -8,5 +8,9 @@ public class Urls
     /** 获取登录验证码 **/
     public static final String QR_CODE = "https://login.weixin.qq.com/qrcode/";
 
+    /** 监听用户扫描登录二维 **/
+    public static final String LISTEN_QR_SCAN = "https://login.wx.qq.com/cgi-bin/mmwebwx-bin/login?loginicon=true&tip=0&r=1702132715&uuid=";
+
+
 
 }

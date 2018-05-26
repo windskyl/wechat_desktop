@@ -1,24 +1,22 @@
 package com.rc.frames;
 
-import com.rc.app.Launcher;
 import com.rc.components.*;
-import com.rc.db.model.CurrentUser;
 import com.rc.db.service.CurrentUserService;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.tasks.HttpBytesGetTask;
+import com.rc.tasks.HttpGetTask;
 import com.rc.utils.*;
 import org.apache.ibatis.session.SqlSession;
-import org.json.JSONObject;
-import com.rc.tasks.HttpPostTask;
 import com.rc.tasks.HttpResponseListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.misc.BASE64Decoder;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Created by song on 08/06/2017.
@@ -41,6 +39,12 @@ public class LoginFrame extends JFrame
 
     private SqlSession sqlSession;
     private CurrentUserService currentUserService;
+    private String uuid;
+
+    private boolean qrScaned = false;
+    private boolean loginConfirmed = false;
+
+    Logger logger = LoggerFactory.getLogger(LoginFrame.class);
 
 
     public LoginFrame()
@@ -50,7 +54,11 @@ public class LoginFrame extends JFrame
         initView();
         centerScreen();
         setListeners();
+
+        showQrCode();
+        listenQrCodeScan();
     }
+
 
     public LoginFrame(String username)
     {
@@ -87,45 +95,11 @@ public class LoginFrame extends JFrame
 
         imageLabel = new JLabel();
         imageLabel.setPreferredSize(new Dimension(QR_WIDTH, QR_WIDTH));
-        imageLabel.setIcon(getQrCode());
 
         tipLabel = new RCTextLabel("请使用微信扫一扫以登录");
         tipLabel.setForeground(Colors.FONT_GRAY_DARKER);
 
         setIconImage(IconUtil.getIcon(this, "/image/ic_launcher.png").getImage());
-    }
-
-    private ImageIcon getQrCode()
-    {
-        try
-        {
-            // 获取UUID
-            String ret = HttpUtil.get(Urls.UUID);
-            String uuid = parseUUID(ret);
-            ImageIcon qrCode = new ImageIcon(new URL(Urls.QR_CODE + uuid));
-            qrCode.setImage(qrCode.getImage().getScaledInstance(QR_WIDTH, QR_WIDTH, Image.SCALE_SMOOTH));
-            return qrCode;
-
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * 解析UUID
-     *
-     * @param ret window.QRLogin.code = 200; window.QRLogin.uuid = "oeApJlhU2A==";
-     * @return
-     */
-    private String parseUUID(String ret)
-    {
-        if (ret.contains("200"))
-        {
-            return ret.substring(ret.indexOf("\"") + 1, ret.length() - 2);
-        }
-        return null;
     }
 
     private void initView()
@@ -212,5 +186,192 @@ public class LoginFrame extends JFrame
                 }
             });
         }
+    }
+
+    /**
+     * 获取登录二维码
+     *
+     * @return
+     */
+    private void showQrCode()
+    {
+        HttpGetTask task = new HttpGetTask();
+        task.setListener(new HttpResponseListener()
+        {
+            @Override
+            public void onSuccess(Object ret)
+            {
+                uuid = parseUUID(ret.toString());
+                logger.info("UUID = {}", uuid);
+
+                /*ImageIcon qrCode = null;
+                try
+                {
+                    qrCode = new ImageIcon(new URL(Urls.QR_CODE + uuid));
+                    qrCode.setImage(qrCode.getImage().getScaledInstance(QR_WIDTH, QR_WIDTH, Image.SCALE_SMOOTH));
+                    imageLabel.setIcon(qrCode);
+                } catch (MalformedURLException e)
+                {
+                    e.printStackTrace();
+                    logger.error("无法获取登录二维码");
+                    tipLabel.setText("无法获取登录二维码");
+                }*/
+
+                new HttpBytesGetTask(new HttpResponseListener()
+                {
+                    @Override
+                    public void onSuccess(Object ret)
+                    {
+                        byte[] data = (byte[]) ret;
+                        ImageIcon icon = new ImageIcon(data);
+                        icon.setImage(icon.getImage().getScaledInstance(QR_WIDTH, QR_WIDTH, Image.SCALE_SMOOTH));
+                        imageLabel.setIcon(icon);
+
+                        listenQrCodeScan();
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+                        tipLabel.setText("无法获取登录二维码");
+                    }
+                }).execute(Urls.QR_CODE + uuid);
+            }
+
+            @Override
+            public void onFailed()
+            {
+                tipLabel.setText("无法获取登录二维码");
+            }
+        });
+
+        task.execute(Urls.UUID);
+    }
+
+    /**
+     * 解析UUID
+     *
+     * @param ret window.QRLogin.code = 200; window.QRLogin.uuid = "oeApJlhU2A==";
+     * @return
+     */
+    private String parseUUID(String ret)
+    {
+        if (ret.contains("200"))
+        {
+            return ret.substring(ret.indexOf("\"") + 1, ret.length() - 2);
+        }
+        return null;
+    }
+
+
+    /**
+     * 监听用户是否扫描二维码
+     */
+    private void listenQrCodeScan()
+    {
+        // 监听用户是否扫描二维码
+        new Thread(() ->
+        {
+            while (!qrScaned)
+            {
+                new HttpGetTask(new HttpResponseListener()
+                {
+                    @Override
+                    public void onSuccess(Object ret)
+                    {
+                        String res = ret.toString();
+                        if (res.trim().startsWith("window.code=201"))
+                        {
+                            tipLabel.setText("请在手机上确认登录");
+                            qrScaned = true;
+
+                            String avatarData = res.substring(res.indexOf("base64,") + 7, res.length() - 2);
+                            showAvatar(avatarData);
+
+                            listenLoginConfirm();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+
+                    }
+                }).execute(Urls.LISTEN_QR_SCAN + uuid + "&_=" + System.currentTimeMillis());
+
+                try
+                {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
+    private void showAvatar(String avatarData)
+    {
+        BASE64Decoder decoder = new BASE64Decoder();
+        try
+        {
+            byte[] data = decoder.decodeBuffer(avatarData);
+            ImageIcon icon = new ImageIcon(data);
+            icon.setImage(icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+            imageLabel.setIcon(icon);
+            imageLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 监听是否确认登录
+     */
+    private void listenLoginConfirm()
+    {
+        // 监听是否确认登录
+        new Thread(() ->
+        {
+            while (!loginConfirmed)
+            {
+                System.out.println("检查是否确认登录");
+                new HttpGetTask(new HttpResponseListener()
+                {
+                    @Override
+                    public void onSuccess(Object ret)
+                    {
+                        String res = ret.toString();
+                        /*
+                        window.code=200;
+                        window.redirect_uri="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=AeVvpDZKEOmOtJHZ8AHyYySO@qrticket_0&uuid=gYB5OTGKPQ==&lang=zh_CN&scan=1527307430";
+                        */
+
+                        if (res.trim().startsWith("window.code=200"))
+                        {
+                            tipLabel.setText("登录成功");
+                            loginConfirmed = true;
+                        }
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+
+                    }
+                }).execute(Urls.LISTEN_QR_SCAN + uuid + "&_=" + System.currentTimeMillis());
+
+                try
+                {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

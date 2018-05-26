@@ -9,6 +9,17 @@ import java.io.IOException;
  */
 public class HttpBytesGetTask extends HttpTask
 {
+    public HttpBytesGetTask()
+    {
+
+    }
+
+    public HttpBytesGetTask(HttpResponseListener listener)
+    {
+        super(listener);
+    }
+
+
     @Override
     public void execute(String url)
     {

@@ -8,6 +8,16 @@ import java.util.Map;
  */
 public abstract  class HttpTask
 {
+    public HttpTask()
+    {
+
+    }
+
+    public HttpTask(HttpResponseListener listener)
+    {
+        this.listener = listener;
+    }
+
     protected HttpResponseListener listener;
 
     protected Map<String, String> headers = new HashMap<>();
