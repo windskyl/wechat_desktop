@@ -36,49 +36,41 @@ public class HttpUtil
         try
         {
             client = initClientBuilder().build();
-        }
-        catch (KeyManagementException e)
+        } catch (KeyManagementException e)
         {
             e.printStackTrace();
-        }
-        catch (NoSuchAlgorithmException e)
+        } catch (NoSuchAlgorithmException e)
         {
             e.printStackTrace();
         }
     }
 
-    public static String get(String url) throws IOException
+    public static Response get(String url) throws IOException
     {
         return get(url, null, null);
     }
 
-    public static byte[] getBytes(String url, Map<String, String> headers, Map<String, String> params) throws IOException
+    public static Response getBytes(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
-        try (Response response = _get(url, headers, params))
+        Response response = _get(url, headers, params);
+        if (response != null)
         {
-            if (response != null)
-            {
-                return response.body().bytes();
-            }
-            else
-            {
-                throw new IOException("Get请求失败:" + url);
-            }
+            return response;
+        } else
+        {
+            throw new IOException("Get请求失败:" + url);
         }
     }
 
-    public static String get(String url, Map<String, String> headers, Map<String, String> params) throws IOException
+    public static Response get(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
-        try(Response response = _get(url, headers, params))
+        Response response = _get(url, headers, params);
+        if (response != null)
         {
-            if (response != null)
-            {
-                return response.body().string();
-            }
-            else
-            {
-                throw new IOException("Get请求失败:" + url);
-            }
+            return response;
+        } else
+        {
+            throw new IOException("Get请求失败:" + url);
         }
     }
 
@@ -111,15 +103,14 @@ public class HttpUtil
         if (response.isSuccessful())
         {
             return response;
-        }
-        else
+        } else
         {
             throw new IOException("Unexpected code " + response);
         }
     }
 
 
-    public static String post(String url, Map<String, String> headers, Map<String, String> params) throws IOException
+    public static Response post(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
         FormBody.Builder builder = new FormBody.Builder();
         for (String key : params.keySet())
@@ -138,10 +129,8 @@ public class HttpUtil
         }
         Request requestPost = reqBuilder.post(requestBodyPost).build();
 
-        try(Response response = client.newCall(requestPost).execute())
-        {
-            return response.body().string();
-        }
+        Response response = client.newCall(requestPost).execute();
+        return response;
     }
 
     public static boolean upload(String url, String type, byte[] part) throws IOException
@@ -225,12 +214,10 @@ public class HttpUtil
                 inputStream.close();
                 outputStream.close();
             }
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             throw e;
-        }
-        finally
+        } finally
         {
             if (response != null)
             {

@@ -6,6 +6,7 @@ import com.rc.frames.MainFrame;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.DbUtils;
+import okhttp3.Headers;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -233,7 +234,7 @@ public class Launcher
                 task.setListener(new HttpResponseListener<JSONObject>()
                 {
                     @Override
-                    public void onSuccess(JSONObject retJson)
+                    public void onSuccess(JSONObject retJson, Headers headers)
                     {
                         try
                         {

@@ -11,6 +11,9 @@ public class Urls
     /** 监听用户扫描登录二维 **/
     public static final String LISTEN_QR_SCAN = "https://login.wx.qq.com/cgi-bin/mmwebwx-bin/login?loginicon=true&tip=0&r=1702132715&uuid=";
 
+    /** 初始化 **/
+    public static final String WX_INIT = "https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit";
+
 
 
 }

@@ -15,6 +15,7 @@ import com.rc.frames.MainFrame;
 import com.rc.tasks.HttpPostTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.AvatarUtil;
+import okhttp3.Headers;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -406,7 +407,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         HttpResponseListener callback = new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onSuccess(JSONObject retJson)
+            public void onSuccess(JSONObject retJson, Headers headers)
             {
                 if (++count[0] == usernames.length)
                 {
@@ -537,7 +538,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onSuccess(JSONObject retJson)
+            public void onSuccess(JSONObject retJson, Headers headers)
             {
                 if (retJson.has("success"))
                 {
@@ -577,7 +578,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onSuccess(JSONObject retJson)
+            public void onSuccess(JSONObject retJson, Headers headers)
             {
                 if (retJson.has("success"))
                 {

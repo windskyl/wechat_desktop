@@ -21,6 +21,7 @@ import com.rc.tasks.DownloadTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.*;
 import com.rc.websocket.WebSocketClient;
+import okhttp3.Headers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -547,7 +548,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         task.setListener(new HttpResponseListener<byte[]>()
         {
             @Override
-            public void onSuccess(byte[] data)
+            public void onSuccess(byte[] data, Headers headers)
             {
                 SearchResultFileItemViewHolder holder = fileItemViewHolders.get(fileAttachment.getId());
 

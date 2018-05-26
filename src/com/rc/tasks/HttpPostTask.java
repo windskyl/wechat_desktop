@@ -1,6 +1,7 @@
 package com.rc.tasks;
 
 import com.rc.utils.HttpUtil;
+import okhttp3.Response;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -11,6 +12,15 @@ import java.io.IOException;
 public class HttpPostTask extends HttpTask
 {
 
+    public HttpPostTask()
+    {
+    }
+
+    public HttpPostTask(HttpResponseListener listener)
+    {
+        super(listener);
+    }
+
     @Override
     public void execute(String url)
     {
@@ -19,14 +29,9 @@ public class HttpPostTask extends HttpTask
             @Override
             public void run()
             {
-                try
+                try(Response response = HttpUtil.post(url, headers, requestParams))
                 {
-                    String ret = HttpUtil.post(url, headers, requestParams);
-                    JSONObject retJson = new JSONObject(ret);
-                    if (listener != null)
-                    {
-                        listener.onSuccess(retJson);
-                    }
+                    handleResponse(response);
                 }
                 catch (IOException e)
                 {

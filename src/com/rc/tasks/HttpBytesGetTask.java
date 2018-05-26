@@ -1,6 +1,7 @@
 package com.rc.tasks;
 
 import com.rc.utils.HttpUtil;
+import okhttp3.Response;
 
 import java.io.IOException;
 
@@ -28,12 +29,11 @@ public class HttpBytesGetTask extends HttpTask
             @Override
             public void run()
             {
-                try
+                try(Response ret = HttpUtil.getBytes(url, headers, requestParams))
                 {
-                    byte[] ret = HttpUtil.getBytes(url, headers, requestParams);
                     if (listener != null)
                     {
-                        listener.onSuccess(ret);
+                        listener.onSuccess(ret.body().bytes(),  ret.headers());
                     }
                 }
                 catch (IOException e)

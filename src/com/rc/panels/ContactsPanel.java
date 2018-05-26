@@ -10,6 +10,7 @@ import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.entity.ContactsItem;
 import com.rc.utils.AvatarUtil;
+import okhttp3.Headers;
 import org.apache.log4j.Logger;
 import com.rc.tasks.HttpBytesGetTask;
 import com.rc.tasks.HttpResponseListener;
@@ -163,7 +164,7 @@ public class ContactsPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<byte[]>()
         {
             @Override
-            public void onSuccess(byte[] data)
+            public void onSuccess(byte[] data, Headers headers)
             {
                 processAvatarData(data, username);
                 if (hotRefresh)

@@ -13,6 +13,7 @@ import com.rc.utils.AvatarUtil;
 import com.rc.websocket.handler.StreamNotifyUserCollectionHandler;
 import com.rc.websocket.handler.StreamRoomMessagesHandler;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
+import okhttp3.Headers;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -566,7 +567,7 @@ public class WebSocketClient
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onSuccess(JSONObject retJson)
+            public void onSuccess(JSONObject retJson, Headers headers)
             {
                 try
                 {
@@ -1001,7 +1002,7 @@ public class WebSocketClient
         task.addHeader("X-User-Id", currentUser.getUserId());
         task.setListener(new HttpResponseListener<JSONObject>()
         {
-            public void onSuccess(JSONObject retJson)
+            public void onSuccess(JSONObject retJson, Headers headers)
             {
                 try
                 {

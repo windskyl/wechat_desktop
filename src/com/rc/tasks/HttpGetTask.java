@@ -1,6 +1,7 @@
 package com.rc.tasks;
 
 import com.rc.utils.HttpUtil;
+import okhttp3.Response;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -27,26 +28,9 @@ public class HttpGetTask extends HttpTask
             @Override
             public void run()
             {
-                try
+                try(Response ret = HttpUtil.get(url, headers, requestParams))
                 {
-                    String ret = HttpUtil.get(url, headers, requestParams);
-                    if (ret != null && !ret.isEmpty())
-                    {
-                        if (ret.trim().startsWith("{"))
-                        {
-                            JSONObject retJson = new JSONObject(ret);
-                            if (listener != null)
-                            {
-                                listener.onSuccess(retJson);
-                            }
-                        }
-                        else
-                        {
-                            listener.onSuccess(ret);
-                        }
-
-                    }
-
+                    handleResponse(ret);
                 }
                 catch (IOException e)
                 {

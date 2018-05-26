@@ -19,6 +19,7 @@ import com.rc.helper.MessageViewHolderCacheHelper;
 import com.rc.listener.ExpressionListener;
 import com.rc.utils.*;
 import com.rc.websocket.WebSocketClient;
+import okhttp3.Headers;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -874,7 +875,7 @@ public class ChatPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onSuccess(JSONObject retJson)
+            public void onSuccess(JSONObject retJson, Headers headers)
             {
                 try
                 {
@@ -2011,7 +2012,7 @@ public class ChatPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<byte[]>()
         {
             @Override
-            public void onSuccess(byte[] data)
+            public void onSuccess(byte[] data, Headers headers)
             {
                 //System.out.println(data);
                 String path = fileCache.cacheFile(fileAttachment.getId(), fileAttachment.getTitle(), data);
@@ -2133,7 +2134,7 @@ public class ChatPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onSuccess(JSONObject retJson)
+            public void onSuccess(JSONObject retJson, Headers headers)
             {
                 String creator = "";
                 try
