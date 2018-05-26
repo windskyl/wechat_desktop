@@ -4,6 +4,7 @@ import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.message.MainOperationPopupMenu;
+import com.rc.db.model.CurrentUser;
 import com.rc.db.service.CurrentUserService;
 import com.rc.frames.MainFrame;
 import com.rc.frames.SystemConfigDialog;
@@ -74,11 +75,10 @@ public class MyInfoPanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-
-        //GImage.setBorder(new SubtleSquareBorder(true));
-        currentUsername = currentUserService.findAll().get(0).getUsername();
+        CurrentUser currentUser = currentUserService.findAll().get(0);
+        currentUsername = currentUser.getNickName();
         avatar = new JLabel();
-        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
+        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getHeadImgUrl()).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
 
         avatar.setPreferredSize(new Dimension(50, 50));
         avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));

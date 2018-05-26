@@ -1,6 +1,7 @@
 package com.rc.frames;
 
 import com.rc.components.*;
+import com.rc.db.model.CurrentUser;
 import com.rc.db.service.CurrentUserService;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.tasks.HttpBytesGetTask;
@@ -10,6 +11,7 @@ import com.rc.utils.*;
 import okhttp3.Headers;
 import org.apache.ibatis.session.SqlSession;
 import com.rc.tasks.HttpResponseListener;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
@@ -19,6 +21,8 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by song on 08/06/2017.
@@ -59,30 +63,6 @@ public class LoginFrame extends JFrame
 
         showQrCode();
         listenQrCodeScan();
-
-        /*HttpPostTask task = new HttpPostTask();
-        task.addHeader("Cookie", "pgv_pvi=464926720; pgv_pvid=3185718195; pac_uid=0_5ac5a2e58a764; pt2gguin=o0443948402; RK=LO4s1Vl0eb; ptcz=d8aa6c0642f21f4d5babc2838bafdadc74c775f46a211bcd11d30148d8e3ada6; mm_lang=zh_CN; webwxuvid=358e049e0960146d2e7dfa3e04dcf77f4310e1388d19033b66301f75aa6f8681d5ad7b30194b9c52c97684b831406676; MM_WX_NOTIFY_STATE=1; MM_WX_SOUND_STATE=1; refreshTimes=4; wxuin=1023459521; last_wxuin=1023459521; wxpluginkey=1527319220; wxsid=45Gogdl865DNw16r; wxloadtime=1527321108; webwx_data_ticket=gScnNWNDpLSQlnyA8/635klR; webwx_auth_ticket=CIsBENH0i4wBGoABvzhiENK+m9xZDJAqYIxf0TTpSJDPVMBkdqgacfpwcLIPE7OBQzIKyBucwmRih76w3SqxRxYZAiUlI/gpCh8SUTWE6KDsK40HWUUp6vY9CEjUm7mgFntnGt3fSitcxcGOh2UvA7duSyOJIk2er9ehPRVDht6+Fr3/tJ3JLAc3XeY=; login_frequency=2");
-        task.addRequestParam("DeviceID", "e718414749325294");
-        task.addRequestParam("Sid", "45Gogdl865DNw16r");
-        task.addRequestParam("Skey", "@crypt_f1ee1c3b_f269d0a23c1b1f78a2a54839e7a3e617");
-        task.addRequestParam("Uin", "1023459521");
-        task.setListener(new HttpResponseListener()
-        {
-            @Override
-            public void onSuccess(Object ret)
-            {
-                System.out.println(ret);
-            }
-
-            @Override
-            public void onFailed()
-            {
-
-            }
-        });
-
-        task.execute("https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r=1687218564&lang=zh_CN&pass_ticket=sjlSwQvyod%252BshX6VV7zCErpbSLK41ojYYGmCIvsc9xjklG5JDKuPuC6bFKuJ6hLU");
-        */
     }
 
 
@@ -400,10 +380,9 @@ public class LoginFrame extends JFrame
         new HttpGetTask(new HttpResponseListener()
         {
             @Override
-            public void onSuccess(Object ret, Headers headers)
+            public void onSuccess(Object body, Headers headers)
             {
-                String res = ret.toString();
-
+                String res = body.toString();
                 String retCode = res.substring(res.indexOf("<ret>") + 5, res.indexOf("</ret>"));
 
                 String skey = res.substring(res.indexOf("<skey>") + 6, res.indexOf("</skey>"));
@@ -415,14 +394,17 @@ public class LoginFrame extends JFrame
                 String pass_ticket = res.substring(res.indexOf("<pass_ticket>") + 13, res.indexOf("</pass_ticket>"));
 
 
-                System.out.println(res);
-
                 System.out.println("skey = " + skey);
                 System.out.println("wxsid = " + wxsid);
                 System.out.println("wxuin = " + wxuin);
                 System.out.println("pass_ticket = " + pass_ticket);
-                wxinit(skey, wxsid, wxuin, pass_ticket);
+                Map<String, List<String>> map = headers.toMultimap();
+                map.forEach((name, list) ->
+                {
+                    System.out.println(name + ": " + list);
+                });
 
+                wxinit(skey, wxsid, wxuin, pass_ticket);
             }
 
             @Override
@@ -433,15 +415,24 @@ public class LoginFrame extends JFrame
         }).execute(redirectUri);
     }
 
+    /**
+     * 获取初始数据
+     */
     private void wxinit(String skey, String wxsid, String wxuin, String pass_ticket)
     {
-        HttpPostTask task = new HttpPostTask(new HttpResponseListener()
+        HttpPostTask task = new HttpPostTask(new HttpResponseListener<JSONObject>()
         {
 
             @Override
-            public void onSuccess(Object body, Headers headers)
+            public void onSuccess(JSONObject body, Headers headers)
             {
                 System.out.println(body);
+                saveCurrentUser(skey, wxsid, wxuin, pass_ticket, body);
+                dispose();
+
+                MainFrame frame = new MainFrame();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
             }
 
             @Override
@@ -451,16 +442,30 @@ public class LoginFrame extends JFrame
             }
         });
 
+        task.setJson("{\"BaseRequest\":{\"Uin\":\"" + wxuin + "\",\"Sid\":\"" + wxsid + "\",\"Skey\":\"" + skey + "\",\"DeviceID\":\"e784910383813007\"}}");
+        task.execute(Urls.WX_INIT + "?r=1679825476&pass_ticket=" + pass_ticket);
+    }
 
-        task.addRequestParam("DeviceID", "e718414749325294");
-        task.addRequestParam("Sid", wxsid);
-        task.addRequestParam("Skey", skey);
-        task.addRequestParam("Uin", wxuin);
-        task.addHeader("Cookie", "pgv_pvi=464926720; pgv_pvid=3185718195; pac_uid=0_5ac5a2e58a764; pt2gguin=o0443948402; RK=LO4s1Vl0eb; ptcz=d8aa6c0642f21f4d5babc2838bafdadc74c775f46a211bcd11d30148d8e3ada6; mm_lang=zh_CN; webwxuvid=358e049e0960146d2e7dfa3e04dcf77f4310e1388d19033b66301f75aa6f8681d5ad7b30194b9c52c97684b831406676; MM_WX_NOTIFY_STATE=1; MM_WX_SOUND_STATE=1; refreshTimes=4; wxuin=1023459521; last_wxuin=1023459521; wxpluginkey=1527319220; wxsid=45Gogdl865DNw16r; wxloadtime=1527321108; webwx_data_ticket=gScnNWNDpLSQlnyA8/635klR; webwx_auth_ticket=CIsBENH0i4wBGoABvzhiENK+m9xZDJAqYIxf0TTpSJDPVMBkdqgacfpwcLIPE7OBQzIKyBucwmRih76w3SqxRxYZAiUlI/gpCh8SUTWE6KDsK40HWUUp6vY9CEjUm7mgFntnGt3fSitcxcGOh2UvA7duSyOJIk2er9ehPRVDht6+Fr3/tJ3JLAc3XeY=; login_frequency=2");
 
-        //task.addRequestParam("pass_ticket", pass_ticket);
-        //task.addRequestParam("lang", "zh_CN");
+    /**
+     * 保存当前登录用户信息
+     */
+    private void saveCurrentUser(String skey, String wxsid, String wxuin, String pass_ticket, JSONObject initData)
+    {
+        CurrentUser user = new CurrentUser();
+        user.setSkey(skey);
+        user.setSid(wxsid);
+        user.setUin(wxuin);
+        user.setPassTicket(pass_ticket);
 
-        //task.execute(Urls.WX_INIT + "?r=1686288494&lang=zh_CN&pass_ticket=" + pass_ticket);
+        JSONObject userInfo = initData.getJSONObject("User");
+        user.setSex(userInfo.getInt("Sex"));
+        user.setUsername(userInfo.getString("UserName"));
+        user.setHeadImgUrl(userInfo.getString("HeadImgUrl"));
+        user.setNickName(userInfo.getString("NickName"));
+        user.setSignature(userInfo.getString("Signature"));
+        user.setRemarkName(userInfo.getString("RemarkName"));
+        currentUserService.deleteAll();
+        currentUserService.insert(user);
     }
 }

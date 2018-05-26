@@ -12,6 +12,8 @@ import java.io.IOException;
 public class HttpPostTask extends HttpTask
 {
 
+    private String json;
+
     public HttpPostTask()
     {
     }
@@ -29,7 +31,7 @@ public class HttpPostTask extends HttpTask
             @Override
             public void run()
             {
-                try(Response response = HttpUtil.post(url, headers, requestParams))
+                try(Response response = HttpUtil.post(url, headers, requestParams, json))
                 {
                     handleResponse(response);
                 }
@@ -44,5 +46,15 @@ public class HttpPostTask extends HttpTask
             }
         }).start();
 
+    }
+
+    public String getJson()
+    {
+        return json;
+    }
+
+    public void setJson(String json)
+    {
+        this.json = json;
     }
 }

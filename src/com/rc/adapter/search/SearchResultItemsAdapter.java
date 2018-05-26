@@ -597,8 +597,8 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         });
 
         currentUser = currentUserService.findAll().get(0);
-        String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
-        task.execute(url);
+        //String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+        //task.execute(url);
     }
 
     /**

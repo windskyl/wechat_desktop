@@ -7,13 +7,13 @@
 	<cache/>
 
 	<insert id="insert">
-		INSERT INTO current_user(userId,username,authToken,password,rawPassword,expireDate, realName, bcrypt, avatarOrigin)
-		VALUES (#{userId},#{username},#{authToken},#{password},#{rawPassword},#{expireDate},#{realName},#{bcrypt},#{avatarOrigin})
+		INSERT INTO current_user(username,skey,sid,uin,passTicket,sex,nickName,signature,remarkName,headImgUrl)
+		VALUES (#{username},#{skey},#{sid},#{uin},#{passTicket},#{sex},#{nickName},#{signature},#{remarkName},#{headImgUrl})
 	</insert>
 
 
 	<select id="findById" resultType="CurrentUser">
-		SELECT * FROM current_user where userId = #{id}
+		SELECT * FROM current_user where username = #{username}
 	</select>
 
 	<select id="findAll" resultType="CurrentUser">
@@ -29,7 +29,7 @@
 	</select>
 
 	<select id="exist" resultType="java.lang.Integer">
-		SELECT count(1) FROM current_user where userId = #{id}
+		SELECT count(1) FROM current_user where username = #{username}
 	</select>
 
 	<delete id="deleteAll">
@@ -39,33 +39,35 @@
 	<update id="update">
 		UPDATE current_user
 		<set>
-			userId=#{userId},
 			username=#{username},
-			authToken=#{authToken},
-			password=#{password},
-			rawPassword=#{rawPassword},
-			expireDate=#{expireDate},
-			realName=#{realName},
-			bcrypt=#{bcrypt},
-			avatarOrigin=#{avatarOrigin},
+			skey=#{skey},
+			sid=#{sid},
+			uin=#{uin},
+			passTicket=#{passTicket},
+			sex=#{sex},
+			nickName=#{nickName},
+			signature=#{signature},
+			remarkName=#{remarkName},
+			headImgUrl=#{headImgUrl},
 		</set>
-		WHERE userId=#{userId}
+		WHERE username=#{username}
 	</update>
 
 	<update id="updateIgnoreNull">
 		UPDATE current_user
 		<set>
-			<if test="userId!= null">userId=#{userId},</if>
 			<if test="username!= null">username=#{username},</if>
-			<if test="authToken!= null">authToken=#{authToken},</if>
-			<if test="password!= null">password=#{password},</if>
-			<if test="rawPassword!= null">rawPassword=#{rawPassword},</if>
-			<if test="expireDate!= null">expireDate=#{expireDate},</if>
-			<if test="realName!= null">realName=#{realName},</if>
-			<if test="bcrypt!= null">bcrypt=#{bcrypt},</if>
-			<if test="avatarOrigin!= null">avatarOrigin=#{avatarOrigin},</if>
+			<if test="skey!= null">skey=#{skey},</if>
+			<if test="sid!= null">sid=#{sid},</if>
+			<if test="uin!= null">uin=#{uin},</if>
+			<if test="passTicket!= null">passTicket=#{passTicket},</if>
+			<if test="sex!= null">sex=#{sex},</if>
+			<if test="nickName!= null">nickName=#{nickName},</if>
+			<if test="signature!= null">signature=#{signature},</if>
+			<if test="remarkName!= null">remarkName=#{remarkName},</if>
+			<if test="headImgUrl!= null">headImgUrl=#{headImgUrl},</if>
 		</set>
-		WHERE userId=#{userId}
+		WHERE username=#{username}
 	</update>
 </mapper>
 

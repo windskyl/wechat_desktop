@@ -292,7 +292,7 @@ public class ChatPanel extends ParentAvailablePanel
                     {
                         for (int i = messages.size() - 1; i >= 0; i--)
                         {
-                            MessageItem item = new MessageItem(messages.get(i), currentUser.getUserId());
+                            MessageItem item = new MessageItem(messages.get(i), currentUser.getUsername());
                             messageItems.add(0, item);
                         }
                     }
@@ -712,7 +712,7 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 if (!message.isDeleted())
                 {
-                    MessageItem item = new MessageItem(message, currentUser.getUserId());
+                    MessageItem item = new MessageItem(message, currentUser.getUsername());
                     this.messageItems.add(item);
                 }
             }
@@ -741,7 +741,7 @@ public class ChatPanel extends ParentAvailablePanel
         {
             for (Message message : messages)
             {
-                MessageItem item = new MessageItem(message, currentUser.getUserId());
+                MessageItem item = new MessageItem(message, currentUser.getUsername());
                 messageItems.add(item);
             }
         }
@@ -936,8 +936,8 @@ public class ChatPanel extends ParentAvailablePanel
         }
         String url = Launcher.HOSTNAME + "/api/v1/" + t + ".history";
 
-        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-        task.addHeader("X-User-Id", currentUser.getUserId());
+        //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUsername());
         task.addRequestParam("roomId", roomId);
         task.addRequestParam("count", "1000");
         task.addRequestParam("oldest", start);
@@ -1168,7 +1168,7 @@ public class ChatPanel extends ParentAvailablePanel
                     {
                         if (!message.isDeleted() && !inMessageItems(message.getId()))
                         {
-                            messageItems.add(new MessageItem(message, currentUser.getUserId()));
+                            messageItems.add(new MessageItem(message, currentUser.getUsername()));
                         }
                     }*/
 
@@ -1179,7 +1179,7 @@ public class ChatPanel extends ParentAvailablePanel
                         Message message = messages.get(i);
                         if (!message.isDeleted() && !inMessageItems(message.getId()))
                         {
-                            messageItems.add(new MessageItem(message, currentUser.getUserId()));
+                            messageItems.add(new MessageItem(message, currentUser.getUsername()));
                         }
                     }
 
@@ -1212,7 +1212,7 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     if (!message.isDeleted())
                     {
-                        messageItems.add(new MessageItem(message, currentUser.getUserId()));
+                        messageItems.add(new MessageItem(message, currentUser.getUsername()));
                     }
                 }
 
@@ -1318,7 +1318,7 @@ public class ChatPanel extends ParentAvailablePanel
 
 
         // 插入新的消息
-        MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
+        MessageItem messageItem = new MessageItem(message, currentUser.getUsername());
         this.messageItems.add(messageItem);
         messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1, false);
 
@@ -1389,7 +1389,7 @@ public class ChatPanel extends ParentAvailablePanel
             item.setMessageContent(content);
             //item.setTimestamp(System.currentTimeMillis() - TIMESTAMP_8_HOURS);
             item.setTimestamp(System.currentTimeMillis());
-            item.setSenderId(currentUser.getUserId());
+            item.setSenderId(currentUser.getUsername());
             item.setSenderUsername(currentUser.getUsername());
             item.setId(messageId);
             item.setMessageType(MessageItem.RIGHT_TEXT);
@@ -1398,7 +1398,7 @@ public class ChatPanel extends ParentAvailablePanel
             dbMessage.setId(messageId);
             dbMessage.setMessageContent(content);
             dbMessage.setRoomId(roomId);
-            dbMessage.setSenderId(currentUser.getUserId());
+            dbMessage.setSenderId(currentUser.getUsername());
             dbMessage.setSenderUsername(currentUser.getUsername());
             dbMessage.setTimestamp(item.getTimestamp());
             dbMessage.setNeedToResend(false);
@@ -1704,7 +1704,7 @@ public class ChatPanel extends ParentAvailablePanel
         final String messageId = fileId;
         item.setMessageContent(name);
         item.setTimestamp(System.currentTimeMillis());
-        item.setSenderId(currentUser.getUserId());
+        item.setSenderId(currentUser.getUsername());
         item.setSenderUsername(currentUser.getUsername());
         item.setId(messageId);
         item.setProgress(0);
@@ -1713,7 +1713,7 @@ public class ChatPanel extends ParentAvailablePanel
         dbMessage.setId(messageId);
         dbMessage.setMessageContent(name);
         dbMessage.setRoomId(roomId);
-        dbMessage.setSenderId(currentUser.getUserId());
+        dbMessage.setSenderId(currentUser.getUsername());
         dbMessage.setSenderUsername(currentUser.getUsername());
         dbMessage.setTimestamp(item.getTimestamp());
         dbMessage.setUpdatedAt(-1L);
@@ -2050,8 +2050,8 @@ public class ChatPanel extends ParentAvailablePanel
             }
         });
 
-        String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
-        task.execute(url);
+        //String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUsername() + "&rc_token=" + currentUser.getAuthToken();
+        //task.execute(url);
     }
 
     /**
@@ -2127,8 +2127,8 @@ public class ChatPanel extends ParentAvailablePanel
         }
 
         HttpGetTask task = new HttpGetTask();
-        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-        task.addHeader("X-User-Id", currentUser.getUserId());
+        //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        //task.addHeader("X-User-Id", currentUser.getUsername());
 
         final String finalArrayName = arrayName;
         task.setListener(new HttpResponseListener<JSONObject>()

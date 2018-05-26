@@ -307,9 +307,9 @@ public class WebSocketClient
         currentUser = currentUserService.findAll().get(0);
         if (currentUser != null)
         {
-            currentUserId = currentUser.getUserId();
+            currentUserId = currentUser.getUsername();
             // 如果之前已登录，且未过期，则恢复登录
-            if (currentUser.getAuthToken() == null || currentUser.getExpireDate() == null || System.currentTimeMillis() >= Long.parseLong(currentUser.getExpireDate()))
+            /*if (currentUser.getAuthToken() == null || currentUser.getExpireDate() == null || System.currentTimeMillis() >= Long.parseLong(currentUser.getExpireDate()))
             {
                 subscriptionHelper.sendNewLoginMessage(currentUser.getUsername(), currentUser.getPassword());
             }
@@ -318,7 +318,7 @@ public class WebSocketClient
                 subscriptionHelper.sendResumeLoginMessage(currentUser.getAuthToken());
                 //subscriptionHelper.sendNewLoginMessage(currentUser.getUsername(), currentUser.getPassword());
 
-            }
+            }*/
         }
     }
 
@@ -500,8 +500,8 @@ public class WebSocketClient
                 JSONObject result = jsonObject.getJSONObject("result");
                 String token = result.getString("token");
                 long tokenExpires = result.getJSONObject("tokenExpires").getLong("$date");
-                currentUser.setAuthToken(token);
-                currentUser.setExpireDate(tokenExpires + "");
+                //currentUser.setAuthToken(token);
+                //currentUser.setExpireDate(tokenExpires + "");
                 currentUserService.update(currentUser);
 
                 // 更新Rooms列表
@@ -561,8 +561,8 @@ public class WebSocketClient
 
         final String currentUsername = currentUser.getUsername();
         HttpGetTask task = new HttpGetTask();
-        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-        task.addHeader("X-User-Id", currentUser.getUserId());
+        //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUsername());
         final String finalRoomType = roomType;
         task.setListener(new HttpResponseListener<JSONObject>()
         {
@@ -940,7 +940,7 @@ public class WebSocketClient
                 // 有未发送成功消息
                 if (lastMessage != null
                         && (lastMessage.getUpdatedAt() < 1 || lastMessage.isNeedToResend())
-                        && lastMessage.getSenderId().equals(currentUser.getUserId()))
+                        && lastMessage.getSenderId().equals(currentUser.getUsername()))
                 {
                     //roomService.updateLastMessage(Realm.getDefaultInstance(), roomId, "[有消息发送失败]", lastMessage.getTimestamp());
                     room.setLastMessage("[有消息发送失败]");
@@ -998,8 +998,8 @@ public class WebSocketClient
     public void updateContactsUser()
     {
         HttpGetTask task = new HttpGetTask();
-        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-        task.addHeader("X-User-Id", currentUser.getUserId());
+        //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUsername());
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             public void onSuccess(JSONObject retJson, Headers headers)
@@ -1216,7 +1216,7 @@ public class WebSocketClient
                 String bcript = fields.getJSONObject("services").getJSONObject("password").getString("bcrypt");
 
                 // 修改了密码，要重新登录
-                if (!bcript.equals(user.getBcrypt()) && user.getBcrypt() != null)
+                //if (!bcript.equals(user.getBcrypt()) && user.getBcrypt() != null)
                 {
 
                     // 如果已打开修改窗口
@@ -1236,18 +1236,18 @@ public class WebSocketClient
                     Launcher.getContext().reLogin(currentUser.getUsername());
                     return;
                 }
-                user.setBcrypt(bcript);
+                //user.setBcrypt(bcript);
 
             }
             else if (fields.has("name"))
             {
                 String name = fields.getString("name");
-                user.setRealName(name);
+                //user.setRealName(name);
 
                 if (fields.has("avatarOrigin"))
                 {
                     String avatarOrigin = fields.getString("avatarOrigin");
-                    user.setAvatarOrigin(avatarOrigin);
+                    //user.setAvatarOrigin(avatarOrigin);
                 }
 
                 //currentUserService.insertOrUpdate(Realm.getDefaultInstance(), user);
@@ -1333,6 +1333,6 @@ public class WebSocketClient
      */
     public void sendChangePasswordMessage(String password)
     {
-        subscriptionHelper.sendChangePasswordMessage(currentUser.getRealName(), currentUser.getPassword(), password);
+        //subscriptionHelper.sendChangePasswordMessage(currentUser.getRealName(), currentUser.getPassword(), password);
     }
 }

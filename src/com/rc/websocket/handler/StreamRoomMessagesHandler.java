@@ -293,7 +293,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
         if (!context.isVisible())
         {
             // 发送通知
-            if (!message.getSenderId().equals(currentUser.getUserId()))
+            if (!message.getSenderId().equals(currentUser.getUsername()))
             {
                 // 苹果系统
                 if (OSUtil.getOsType() == OSUtil.Mac_OS)
@@ -322,7 +322,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             if (!context.isActive())
             {
                 // 发送通知
-                if (!message.getSenderId().equals(currentUser.getUserId()))
+                if (!message.getSenderId().equals(currentUser.getUsername()))
                 {
                     if (OSUtil.getOsType() == OSUtil.Mac_OS)
                     {
@@ -370,7 +370,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
     private void sendNotification(Message message, int osType)
     {
         // 发送通知
-        if (!message.getSenderId().equals(currentUser.getUserId()))
+        if (!message.getSenderId().equals(currentUser.getUsername()))
         {
             String t = EmojiParser.parseToUnicode(message.getMessageContent());
 

@@ -145,7 +145,9 @@ public class AvatarUtil
             avatar = getCachedImageAvatar(username);
             if (avatar == null)
             {
-                avatar = createAvatar(username, username);
+                //avatar = createAvatar(username, username);
+                // 从服务器获取头像
+
             }
 
             avatarCache.put(username, avatar);

@@ -35,7 +35,7 @@ import java.io.InputStream;
  * ├────────────────────────┤                     message time                       │
  * │    search              │  ┌──┐ ┌────────────┐                                   │
  * ├────────────────────────┤  └──┘ │  message   │                                   │
- * │  ▆    │    ▆   │   ▆   │       └────────────┘                                   │
+ * │  ▆    │    ▆   │   ▆ │       └────────────┘                                   │
  * ├────────────────────────┤                                                        │
  * │ ┌──┐ name         14:01│                                                        │
  * │ └──┘ message        99+│                     message time                       │
@@ -77,11 +77,6 @@ public class MainFrame extends JFrame
         initComponents();
         initView();
         initResource();
-
-        // 连接WebSocket
-        startWebSocket();
-
-        test();
     }
 
     private void initResource()
@@ -310,22 +305,6 @@ public class MainFrame extends JFrame
         rightPanel = new RightPanel();
     }
 
-    private void test()
-    {
-        /*Provider provider = Provider.getCurrentProvider(true);
-
-
-        KeyStroke hh = KeyStroke.getKeyStroke('Q', InputEvent.CTRL_DOWN_MASK);
-        provider.register(hh, new HotKeyListener()
-        {
-            @Override
-            public void onHotKey(HotKey hotKey)
-            {
-                System.out.println(hotKey);
-            }
-        });*/
-    }
-
     private void initView()
     {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -408,12 +387,6 @@ public class MainFrame extends JFrame
             });
         }
 
-    }
-
-    private void startWebSocket()
-    {
-        WebSocketClient webSocketClient = new WebSocketClient();
-        webSocketClient.startClient();
     }
 
     @Override

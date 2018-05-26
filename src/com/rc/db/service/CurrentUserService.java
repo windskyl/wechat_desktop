@@ -21,7 +21,7 @@ public class CurrentUserService extends BasicService<CurrentUserDao, CurrentUser
 
     public int insertOrUpdate(CurrentUser currentUser)
     {
-        if (exist(currentUser.getUserId()))
+        if (exist(currentUser.getUsername()))
         {
             return update(currentUser);
         }else

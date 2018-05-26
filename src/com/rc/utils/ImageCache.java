@@ -191,7 +191,8 @@ public class ImageCache
         String url;
         if (imageUrl.startsWith("/file-upload"))
         {
-            url = Launcher.HOSTNAME + imageUrl + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+            //url = Launcher.HOSTNAME + imageUrl + "?rc_uid=" + currentUser.getUsername() + "&rc_token=" + currentUser.getAuthToken();
+            url = null;
         }
         else
         {

@@ -110,14 +110,25 @@ public class HttpUtil
     }
 
 
-    public static Response post(String url, Map<String, String> headers, Map<String, String> params) throws IOException
+    public static Response post(String url, Map<String, String> headers, Map<String, String> params, String json) throws IOException
     {
-        FormBody.Builder builder = new FormBody.Builder();
-        for (String key : params.keySet())
+        RequestBody requestBodyPost;
+
+        if (json != null)
         {
-            builder.add(key, params.get(key));
+            requestBodyPost = RequestBody.create(MediaType.parse("json"), json);
         }
-        RequestBody requestBodyPost = builder.build();
+        else
+        {
+            FormBody.Builder builder = new FormBody.Builder();
+            for (String key : params.keySet())
+            {
+                builder.add(key, params.get(key));
+            }
+
+            requestBodyPost = builder.build();
+        }
+
 
         Request.Builder reqBuilder = new Request.Builder().url(url);
         if (headers != null && headers.size() > 0)

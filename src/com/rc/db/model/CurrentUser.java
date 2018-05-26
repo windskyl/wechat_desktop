@@ -5,50 +5,16 @@ package com.rc.db.model;
  */
 public class CurrentUser extends BasicModel
 {
-    private String userId;
-
     private String username;
-
-    private String authToken;
-
-    private String password;
-
-    private String rawPassword;
-
-    private String expireDate;
-
-    private String realName;
-
-    private String bcrypt;
-
-    private String avatarOrigin;
-
-    public CurrentUser()
-    {
-    }
-
-    public CurrentUser(String userId, String username, String authToken, String password, String rawPassword, String expireDate, String realName, String bcrypt, String avatarOrigin)
-    {
-        this.userId = userId;
-        this.username = username;
-        this.authToken = authToken;
-        this.password = password;
-        this.rawPassword = rawPassword;
-        this.expireDate = expireDate;
-        this.realName = realName;
-        this.bcrypt = bcrypt;
-        this.avatarOrigin = avatarOrigin;
-    }
-
-    public String getUserId()
-    {
-        return userId;
-    }
-
-    public void setUserId(String userId)
-    {
-        this.userId = userId;
-    }
+    private String skey;
+    private String sid;
+    private String uin;
+    private String passTicket;
+    private int sex;
+    private String nickName;
+    private String signature;
+    private String remarkName;
+    private String headImgUrl;
 
     public String getUsername()
     {
@@ -60,89 +26,93 @@ public class CurrentUser extends BasicModel
         this.username = username;
     }
 
-    public String getAuthToken()
+    public String getSkey()
     {
-        return authToken;
+        return skey;
     }
 
-    public void setAuthToken(String authToken)
+    public void setSkey(String skey)
     {
-        this.authToken = authToken;
+        this.skey = skey;
     }
 
-    public String getPassword()
+    public String getSid()
     {
-        return password;
+        return sid;
     }
 
-    public void setPassword(String password)
+    public void setSid(String sid)
     {
-        this.password = password;
+        this.sid = sid;
     }
 
-    public String getRawPassword()
+    public String getUin()
     {
-        return rawPassword;
+        return uin;
     }
 
-    public void setRawPassword(String rawPassword)
+    public void setUin(String uin)
     {
-        this.rawPassword = rawPassword;
+        this.uin = uin;
     }
 
-    public String getExpireDate()
+    public String getPassTicket()
     {
-        return expireDate;
+        return passTicket;
     }
 
-    public void setExpireDate(String expireDate)
+    public void setPassTicket(String passTicket)
     {
-        this.expireDate = expireDate;
+        this.passTicket = passTicket;
     }
 
-    public String getRealName()
+    public int getSex()
     {
-        return realName;
+        return sex;
     }
 
-    public void setRealName(String realName)
+    public void setSex(int sex)
     {
-        this.realName = realName;
+        this.sex = sex;
     }
 
-    public String getBcrypt()
+    public String getNickName()
     {
-        return bcrypt;
+        return nickName;
     }
 
-    public void setBcrypt(String bcrypt)
+    public void setNickName(String nickName)
     {
-        this.bcrypt = bcrypt;
+        this.nickName = nickName;
     }
 
-    public String getAvatarOrigin()
+    public String getSignature()
     {
-        return avatarOrigin;
+        return signature;
     }
 
-    public void setAvatarOrigin(String avatarOrigin)
+    public void setSignature(String signature)
     {
-        this.avatarOrigin = avatarOrigin;
+        this.signature = signature;
     }
 
-    @Override
-    public String toString()
+    public String getRemarkName()
     {
-        return "CurrentUser{" +
-                "userId='" + userId + '\'' +
-                ", username='" + username + '\'' +
-                ", authToken='" + authToken + '\'' +
-                ", password='" + password + '\'' +
-                ", rawPassword='" + rawPassword + '\'' +
-                ", expireDate='" + expireDate + '\'' +
-                ", realName='" + realName + '\'' +
-                ", bcrypt='" + bcrypt + '\'' +
-                ", avatarOrigin='" + avatarOrigin + '\'' +
-                '}';
+        return remarkName;
+    }
+
+    public void setRemarkName(String remarkName)
+    {
+        this.remarkName = remarkName;
+    }
+
+    public String getHeadImgUrl()
+    {
+        return headImgUrl;
+    }
+
+    public void setHeadImgUrl(String headImgUrl)
+    {
+        this.headImgUrl = headImgUrl;
     }
 }

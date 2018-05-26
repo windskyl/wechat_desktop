@@ -431,8 +431,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
             String userId = contactsUserService.findByUsername(username).getUserId();
 
             HttpPostTask task = new HttpPostTask();
-            task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-            task.addHeader("X-User-Id", currentUser.getUserId());
+            //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+            //task.addHeader("X-User-Id", currentUser.getUserId());
             task.addRequestParam("roomId", room.getRoomId());
             task.addRequestParam("userId", userId);
             task.setListener(callback);
@@ -532,8 +532,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private void deleteChannelOrGroup(final String roomId)
     {
         HttpPostTask task = new HttpPostTask();
-        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-        task.addHeader("X-User-Id", currentUser.getUserId());
+        //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        //task.addHeader("X-User-Id", currentUser.getUserId());
         task.addRequestParam("roomId", room.getRoomId());
         task.setListener(new HttpResponseListener<JSONObject>()
         {
@@ -572,8 +572,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private void leaveChannelOrGroup(final String roomId)
     {
         HttpPostTask task = new HttpPostTask();
-        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-        task.addHeader("X-User-Id", currentUser.getUserId());
+       // task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+       // task.addHeader("X-User-Id", currentUser.getUserId());
         task.addRequestParam("roomId", roomId);
         task.setListener(new HttpResponseListener<JSONObject>()
         {
