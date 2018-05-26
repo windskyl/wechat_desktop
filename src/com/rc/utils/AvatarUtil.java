@@ -2,6 +2,11 @@ package com.rc.utils;
 
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
+import com.rc.db.model.CurrentUser;
+import com.rc.tasks.HttpBytesGetTask;
+import com.rc.tasks.HttpGetTask;
+import com.rc.tasks.HttpResponseListener;
+import okhttp3.Headers;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -145,9 +150,7 @@ public class AvatarUtil
             avatar = getCachedImageAvatar(username);
             if (avatar == null)
             {
-                //avatar = createAvatar(username, username);
-                // 从服务器获取头像
-
+                avatar = createAvatar(username, username);
             }
 
             avatarCache.put(username, avatar);
@@ -158,6 +161,7 @@ public class AvatarUtil
 
     /**
      * 刷新用户头像缓存
+     *
      * @param username
      */
     public static void refreshUserAvatarCache(String username)
@@ -172,8 +176,7 @@ public class AvatarUtil
         if (sign.length() > 1)
         {
             drawString = sign.substring(0, 1).toUpperCase() + sign.substring(1, 2).toLowerCase();
-        }
-        else
+        } else
         {
             drawString = sign;
         }
@@ -238,12 +241,10 @@ public class AvatarUtil
         if (type == DEFAULT_AVATAR)
         {
             path = AVATAR_CACHE_ROOT + "/" + username + ".png";
-        }
-        else if (type == CUSTOM_AVATAR)
+        } else if (type == CUSTOM_AVATAR)
         {
             path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".png";
-        }
-        else
+        } else
         {
             throw new RuntimeException("类型不存在");
         }
@@ -260,8 +261,7 @@ public class AvatarUtil
                 /*FileOutputStream outputStream = new FileOutputStream(avatarPath);
                 outputStream.write(data);
                 outputStream.close();*/
-            }
-            else
+            } else
             {
                 throw new RuntimeException("头像保存失败，数据为空");
             }
@@ -284,15 +284,13 @@ public class AvatarUtil
             return imageIcon.getImage();*/
 
             return readImage(path);
-        }
-        else if (defaultAvatarExist(username))
+        } else if (defaultAvatarExist(username))
         {
             String path = AVATAR_CACHE_ROOT + "/" + username + ".png";
             /*ImageIcon imageIcon = new ImageIcon(path);
             return imageIcon.getImage();*/
             return readImage(path);
-        }
-        else
+        } else
         {
             return null;
         }
@@ -303,8 +301,7 @@ public class AvatarUtil
         try
         {
             return ImageIO.read(new File(path));
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -409,8 +406,7 @@ public class AvatarUtil
             int childWidth = parentWidth / 2;
             x = (parentWidth - childWidth) / 2;
             rectangles[0] = new Rectangle(x, x, childWidth, childWidth);
-        }
-        else if (users.length == 2)
+        } else if (users.length == 2)
         {
             int childWidth = (parentWidth - gap * 3) / 2;
 
@@ -424,8 +420,7 @@ public class AvatarUtil
 
             rectangles[0] = r1;
             rectangles[1] = r2;
-        }
-        else if (users.length == 3)
+        } else if (users.length == 3)
         {
             int childWidth = (parentWidth - gap * 3) / 2;
 
@@ -448,8 +443,7 @@ public class AvatarUtil
             rectangles[0] = r1;
             rectangles[1] = r2;
             rectangles[2] = r3;
-        }
-        else if (users.length == 4)
+        } else if (users.length == 4)
         {
             int childWidth = (parentWidth - gap * 3) / 2;
 
@@ -475,8 +469,7 @@ public class AvatarUtil
             rectangles[1] = r2;
             rectangles[2] = r3;
             rectangles[3] = r4;
-        }
-        else if (users.length == 5)
+        } else if (users.length == 5)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
 
@@ -506,8 +499,7 @@ public class AvatarUtil
             rectangles[2] = r3;
             rectangles[3] = r4;
             rectangles[4] = r5;
-        }
-        else if (users.length == 6)
+        } else if (users.length == 6)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
 
@@ -542,8 +534,7 @@ public class AvatarUtil
             rectangles[3] = r4;
             rectangles[4] = r5;
             rectangles[5] = r6;
-        }
-        else if (users.length == 7)
+        } else if (users.length == 7)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
 
@@ -582,8 +573,7 @@ public class AvatarUtil
             rectangles[4] = r5;
             rectangles[5] = r6;
             rectangles[6] = r7;
-        }
-        else if (users.length == 8)
+        } else if (users.length == 8)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
 
@@ -628,9 +618,7 @@ public class AvatarUtil
             rectangles[5] = r6;
             rectangles[6] = r7;
             rectangles[7] = r8;
-        }
-
-        else if (users.length >= 9)
+        } else if (users.length >= 9)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
 
@@ -653,6 +641,59 @@ public class AvatarUtil
         return rectangles;
     }
 
+
+    public static Image getOrLoadUserAvatar(CurrentUser user)
+    {
+        Image avatar;
+
+        avatar = avatarCache.get(user.getUsername());
+        if (avatar == null)
+        {
+            avatar = getCachedImageAvatar(user.getUsername());
+            if (avatar == null)
+            {
+                //avatar = createAvatar(username, username);
+                // 从服务器加载头像
+                HttpBytesGetTask task = new HttpBytesGetTask();
+                String cookie = "mm_lang=" + user.getMmLang() + "; " +
+                        "refreshTimes=3; " +
+                        "wxuin="+user.getUin()+"; " +
+                        "wxloadtime="+user.getWxLoadTime()+"; " +
+                        "webwxuvid="+user.getWebwxuvid()+"; " +
+                        "webwx_auth_ticket="+user.getWebwxAuthTicket()+"; " +
+                        "MM_WX_NOTIFY_STATE=1; " +
+                        "MM_WX_SOUND_STATE=1; " +
+                        "login_frequency=4; " +
+                        "last_wxuin="+user.getUin()+"; " +
+                        "wxsid="+user.getSid()+"; " +
+                        "webwx_data_ticket=" + user.getWebwxDataTicket();
+
+                //cookie = "mm_lang=zh_CN; refreshTimes=5; wxuin=1023459521; wxloadtime=1527351233_expired; webwxuvid=358e049e0960146d2e7dfa3e04dcf77f4310e1388d19033b66301f75aa6f8681323e968e033a73a772ebe36dce66f07f; webwx_auth_ticket=CIsBELD2o+UCGoABm/a0+eTx0/CyEXTHbGm2TDTpSJDPVMBkdqgacfpwcLIPE7OBQzIKyBucwmRih76w3SqxRxYZAiUlI/gpCh8SUfPwh5YumCUlaaBfuNx6DSsemAKWDVBzLbRMAgl9DkHMpRpeR8oImSOBbGW39YrRLhVDht6+Fr3/tJ3JLAc3XeY=; wxpluginkey=1527341762; login_frequency=1; last_wxuin=1023459521; MM_WX_NOTIFY_STATE=1; MM_WX_SOUND_STATE=1; wxsid=JCj5w4PznFEJgNtR; webwx_data_ticket=gSfP0Z6odOwPdDtwLZC69oMB";
+                task.addHeader("Cookie", cookie);
+                task.setListener(new HttpResponseListener<byte[]>()
+                {
+                    @Override
+                    public void onSuccess(byte[] data, Headers headers)
+                    {
+                        saveAvatar(data, user.getUsername());
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+
+                    }
+                });
+
+                String url = "https://wx.qq.com" + user.getHeadImgUrl();
+                task.execute(url);
+            }
+
+            avatarCache.put(user.getUsername(), avatar);
+        }
+
+        return avatar;
+    }
 
     public static void main(String[] a)
     {

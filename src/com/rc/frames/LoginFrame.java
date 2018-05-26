@@ -385,26 +385,73 @@ public class LoginFrame extends JFrame
                 String res = body.toString();
                 String retCode = res.substring(res.indexOf("<ret>") + 5, res.indexOf("</ret>"));
 
+                if (!retCode.equals("0"))
+                {
+                    tipLabel.setText("登录失败");
+                    return;
+                }
+
                 String skey = res.substring(res.indexOf("<skey>") + 6, res.indexOf("</skey>"));
-
                 String wxsid = res.substring(res.indexOf("<wxsid>") + 7, res.indexOf("</wxsid>"));
-
                 String wxuin = res.substring(res.indexOf("<wxuin>") + 7, res.indexOf("</wxuin>"));
-
                 String pass_ticket = res.substring(res.indexOf("<pass_ticket>") + 13, res.indexOf("</pass_ticket>"));
 
+                String wxloadtime = null;
+                String mm_lang = null;
+                String webwx_data_ticket = null;
+                String webwxuvid = null;
+                String webwx_auth_ticket = null;
 
-                System.out.println("skey = " + skey);
-                System.out.println("wxsid = " + wxsid);
-                System.out.println("wxuin = " + wxuin);
-                System.out.println("pass_ticket = " + pass_ticket);
                 Map<String, List<String>> map = headers.toMultimap();
-                map.forEach((name, list) ->
+                for (Map.Entry<String, List<String>> entry : map.entrySet())
                 {
-                    System.out.println(name + ": " + list);
-                });
+                    String name = entry.getKey();
+                    List<String> list = entry.getValue();
+                    if (name.equals("set-cookie"))
+                    {
+                        System.out.println(name + ": " + list);
+                        for (String head : list)
+                        {
+                            // head: wxuin=1023459521; Domain=wx.qq.com; Path=/; Expires=Sun, 27-May-2018 02:50:59 GMT
+                            // val: wxuin=1023459521
+                            String val = head.substring(0, head.indexOf(";"));
+                            int eqPos = val.indexOf("=");
+                            String key = val.substring(0, eqPos);
+                            val = val.substring(eqPos + 1);
+                            switch (key)
+                            {
+                                case "wxloadtime":
+                                {
+                                    wxloadtime = val;
+                                    break;
+                                }
+                                case "mm_lang":
+                                {
+                                    mm_lang = val;
+                                    break;
+                                }
+                                case "webwx_data_ticket":
+                                {
+                                    webwx_data_ticket = val;
+                                    break;
+                                }
+                                case "webwxuvid":
+                                {
+                                    webwxuvid = val;
+                                    break;
+                                }
+                                case "webwx_auth_ticket":
+                                {
+                                    webwx_auth_ticket = val;
+                                    break;
+                                }
 
-                wxinit(skey, wxsid, wxuin, pass_ticket);
+                            }
+                        }
+                    }
+                }
+
+                wxinit(skey, wxsid, wxuin, pass_ticket, wxloadtime, mm_lang, webwx_data_ticket, webwxuvid, webwx_auth_ticket);
             }
 
             @Override
@@ -418,7 +465,8 @@ public class LoginFrame extends JFrame
     /**
      * 获取初始数据
      */
-    private void wxinit(String skey, String wxsid, String wxuin, String pass_ticket)
+    private void wxinit(String skey, String wxsid, String wxuin, String pass_ticket,
+                        String wxloadtime, String mm_lang, String webwx_data_ticket, String webwxuvid, String webwx_auth_ticket)
     {
         HttpPostTask task = new HttpPostTask(new HttpResponseListener<JSONObject>()
         {
@@ -427,7 +475,8 @@ public class LoginFrame extends JFrame
             public void onSuccess(JSONObject body, Headers headers)
             {
                 System.out.println(body);
-                saveCurrentUser(skey, wxsid, wxuin, pass_ticket, body);
+                saveCurrentUser(skey, wxsid, wxuin, pass_ticket, wxloadtime, mm_lang, webwx_data_ticket, webwxuvid,
+                        webwx_auth_ticket, body);
                 dispose();
 
                 MainFrame frame = new MainFrame();
@@ -450,7 +499,9 @@ public class LoginFrame extends JFrame
     /**
      * 保存当前登录用户信息
      */
-    private void saveCurrentUser(String skey, String wxsid, String wxuin, String pass_ticket, JSONObject initData)
+    private void saveCurrentUser(String skey, String wxsid, String wxuin, String pass_ticket,
+                                 String wxloadtime, String mm_lang, String webwx_data_ticket, String webwxuvid,
+                                 String webwx_auth_ticket, JSONObject initData)
     {
         CurrentUser user = new CurrentUser();
         user.setSkey(skey);
@@ -465,6 +516,13 @@ public class LoginFrame extends JFrame
         user.setNickName(userInfo.getString("NickName"));
         user.setSignature(userInfo.getString("Signature"));
         user.setRemarkName(userInfo.getString("RemarkName"));
+
+        user.setWxLoadTime(wxloadtime);
+        user.setMmLang(mm_lang);
+        user.setWebwxDataTicket(webwx_data_ticket);
+        user.setWebwxuvid(webwxuvid);
+        user.setWebwxAuthTicket(webwx_auth_ticket);
+
         currentUserService.deleteAll();
         currentUserService.insert(user);
     }

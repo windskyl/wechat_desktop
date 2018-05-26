@@ -16,6 +16,62 @@ public class CurrentUser extends BasicModel
     private String remarkName;
     private String headImgUrl;
 
+    private String wxLoadTime;
+    private String mmLang;
+    private String webwxDataTicket;
+    private String webwxuvid;
+    private String webwxAuthTicket;
+
+    public String getWxLoadTime()
+    {
+        return wxLoadTime;
+    }
+
+    public void setWxLoadTime(String wxLoadTime)
+    {
+        this.wxLoadTime = wxLoadTime;
+    }
+
+    public String getMmLang()
+    {
+        return mmLang;
+    }
+
+    public void setMmLang(String mmLang)
+    {
+        this.mmLang = mmLang;
+    }
+
+    public String getWebwxDataTicket()
+    {
+        return webwxDataTicket;
+    }
+
+    public void setWebwxDataTicket(String webwxDataTicket)
+    {
+        this.webwxDataTicket = webwxDataTicket;
+    }
+
+    public String getWebwxuvid()
+    {
+        return webwxuvid;
+    }
+
+    public void setWebwxuvid(String webwxuvid)
+    {
+        this.webwxuvid = webwxuvid;
+    }
+
+    public String getWebwxAuthTicket()
+    {
+        return webwxAuthTicket;
+    }
+
+    public void setWebwxAuthTicket(String webwxAuthTicket)
+    {
+        this.webwxAuthTicket = webwxAuthTicket;
+    }
+
     public String getUsername()
     {
         return username;
@@ -115,4 +171,6 @@ public class CurrentUser extends BasicModel
     {
         this.headImgUrl = headImgUrl;
     }
+
+
 }

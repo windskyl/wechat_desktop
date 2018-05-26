@@ -11,6 +11,7 @@ import com.rc.frames.SystemConfigDialog;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
+import org.omg.CORBA.Current;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +20,10 @@ import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 17-5-29.
- *
+ * <p>
  * 下图 #RightPanel# 对应的位置<br/>
- *
- *  显示 个人头像、用户名以及主菜单按钮
+ * <p>
+ * 显示 个人头像、用户名以及主菜单按钮
  *
  * <P>推荐使用Menlo或Consolas字体</P>
  * ┌────────────────────────┬────────────────────────────────────────────────────────┐
@@ -78,7 +79,10 @@ public class MyInfoPanel extends ParentAvailablePanel
         CurrentUser currentUser = currentUserService.findAll().get(0);
         currentUsername = currentUser.getNickName();
         avatar = new JLabel();
-        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getHeadImgUrl()).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
+
+        AvatarUtil.getOrLoadUserAvatar(currentUser);//.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        //ImageIcon imageIcon = new ImageIcon();
+        //avatar.setIcon(imageIcon);
 
         avatar.setPreferredSize(new Dimension(50, 50));
         avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -143,12 +147,11 @@ public class MyInfoPanel extends ParentAvailablePanel
 
     public void reloadAvatar()
     {
-        currentUsername = currentUserService.findAll().get(0).getUsername();
+        CurrentUser user = currentUserService.findAll().get(0);
+        currentUsername = user.getUsername();
         //Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
         //avatar.setDrawImage(image);
-        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
-
-
+        avatar.setIcon(new ImageIcon(AvatarUtil.getOrLoadUserAvatar(user).getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
 
         avatar.revalidate();
         avatar.repaint();

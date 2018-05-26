@@ -3,6 +3,7 @@ package com.rc.app;
 import com.rc.db.service.*;
 import com.rc.frames.LoginFrame;
 import com.rc.frames.MainFrame;
+import com.rc.tasks.HttpBytesGetTask;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.DbUtils;
@@ -138,13 +139,13 @@ public class Launcher
 
     private void openFrame()
     {
-        /*// 原来登录过
+        // 原来登录过
         if (checkLoginInfo())
         {
             currentFrame = new MainFrame();
         }
         // 从未登录过
-        else*/
+        else
         {
             currentFrame = new LoginFrame();
             currentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

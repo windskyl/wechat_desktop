@@ -7,8 +7,18 @@
 	<cache/>
 
 	<insert id="insert">
-		INSERT INTO current_user(username,skey,sid,uin,passTicket,sex,nickName,signature,remarkName,headImgUrl)
-		VALUES (#{username},#{skey},#{sid},#{uin},#{passTicket},#{sex},#{nickName},#{signature},#{remarkName},#{headImgUrl})
+		INSERT INTO current_user(username,skey,sid,uin,passTicket,sex,nickName,signature,remarkName,headImgUrl,
+		wxLoadTime,
+		mmLang,
+		webwxDataTicket,
+		webwxuvid,
+		webwxAuthTicket)
+		VALUES (#{username},#{skey},#{sid},#{uin},#{passTicket},#{sex},#{nickName},#{signature},#{remarkName},#{headImgUrl},
+		#{wxLoadTime},
+		#{mmLang},
+		#{webwxDataTicket},
+		#{webwxuvid},
+		#{webwxAuthTicket})
 	</insert>
 
 
@@ -49,6 +59,11 @@
 			signature=#{signature},
 			remarkName=#{remarkName},
 			headImgUrl=#{headImgUrl},
+			wxLoadTime=${wxLoadTime},
+			mmLang=${mmLang},
+			webwxDataTicket=${webwxDataTicket},
+			webwxuvid=${webwxuvid},
+			webwxAuthTicket=${webwxAuthTicket}
 		</set>
 		WHERE username=#{username}
 	</update>
@@ -66,6 +81,13 @@
 			<if test="signature!= null">signature=#{signature},</if>
 			<if test="remarkName!= null">remarkName=#{remarkName},</if>
 			<if test="headImgUrl!= null">headImgUrl=#{headImgUrl},</if>
+
+			<if test="wxLoadTime!= null">wxLoadTime=#{wxLoadTime},</if>
+			<if test="mmLang!= null">mmLang=#{mmLang},</if>
+			<if test="webwxDataTicket!= null">webwxDataTicket=#{webwxDataTicket},</if>
+			<if test="webwxuvid!= null">webwxuvid=#{webwxuvid},</if>
+			<if test="webwxAuthTicket!= null">webwxAuthTicket=#{webwxAuthTicket},</if>
+
 		</set>
 		WHERE username=#{username}
 	</update>
