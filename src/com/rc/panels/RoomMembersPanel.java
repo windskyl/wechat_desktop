@@ -181,7 +181,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
             listView.notifyDataSetChanged(false);
 
             // 如果是公告，则不允许退出
-            if (room.getRoomId().equals("GENERAL"))
+            if (room.getUsername().equals("GENERAL"))
             {
                 setLeaveButtonVisibility(false);
             }
@@ -210,11 +210,11 @@ public class RoomMembersPanel extends ParentAvailablePanel
         if (room.getType().equals("d"))
         {
             members.add(currentUser.getUsername());
-            members.add(room.getName());
+            members.add(room.getNickname());
         }
         else
         {
-            String roomMembers = room.getMember();
+            String roomMembers = "TODO";//room.getMember();
             String[] userArr = new String[]{};
             if (roomMembers != null)
             {
@@ -233,10 +233,10 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 }
             }
 
-            if (room.getCreatorName() != null)
+           /* if (room.getCreatorName() != null)
             {
                 members.add(room.getCreatorName());
-            }
+            }*/
 
             for (int i = 0; i < userArr.length; i++)
             {
@@ -256,7 +256,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
      */
     private boolean isRoomCreator()
     {
-        return room.getCreatorName() != null && room.getCreatorName().equals(currentUser.getUsername());
+        //return room.getCreatorName() != null && room.getCreatorName().equals(currentUser.getUsername());
+        return false;
     }
 
 
@@ -302,7 +303,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "确认解散群聊？", "确认解散群聊", JOptionPane.YES_NO_OPTION);
                     if (ret == JOptionPane.YES_OPTION)
                     {
-                        deleteChannelOrGroup(room.getRoomId());
+                        //deleteChannelOrGroup(room.getRoomId());
                     }
                 }
                 else
@@ -310,7 +311,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "退出群聊，并从聊天列表中删除该群聊", "确认退出群聊", JOptionPane.YES_NO_OPTION);
                     if (ret == JOptionPane.YES_OPTION)
                     {
-                        leaveChannelOrGroup(room.getRoomId());
+                       // leaveChannelOrGroup(room.getRoomId());
                     }
                 }
                 super.mouseClicked(e);
@@ -366,11 +367,11 @@ public class RoomMembersPanel extends ParentAvailablePanel
     {
         List<SelectUserData> userDataList = new ArrayList<>();
         for (String member : members)
-        {
+        {/*
             if (member.equals(room.getCreatorName()) || member.equals("添加成员") || member.equals("删除成员"))
             {
                 continue;
-            }
+            }*/
             userDataList.add(new SelectUserData(member, false));
         }
 
@@ -433,7 +434,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
             HttpPostTask task = new HttpPostTask();
             //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
             //task.addHeader("X-User-Id", currentUser.getUserId());
-            task.addRequestParam("roomId", room.getRoomId());
+            task.addRequestParam("roomId", room.getUsername());
             task.addRequestParam("userId", userId);
             task.setListener(callback);
 
@@ -514,8 +515,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
             }
 
             // 重新生成群头像
-            System.out.println("删除原来群头像: " + room.getName());
-            AvatarUtil.deleteGroupAvatar(room.getName());
+            //System.out.println("删除原来群头像: " + room.getName());
+            //AvatarUtil.deleteGroupAvatar(room.getName());
 
         }
         catch (JSONException e)
@@ -534,7 +535,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         HttpPostTask task = new HttpPostTask();
         //task.addHeader("X-Auth-Token", currentUser.getAuthToken());
         //task.addHeader("X-User-Id", currentUser.getUserId());
-        task.addRequestParam("roomId", room.getRoomId());
+        task.addRequestParam("roomId", room.getUsername());
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override

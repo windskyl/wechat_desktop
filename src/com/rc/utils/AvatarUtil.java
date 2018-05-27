@@ -234,7 +234,7 @@ public class AvatarUtil
             if (data.length > 0)
             {
                 BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(data));
-                bufferedImage = ImageUtil.setRadius(bufferedImage, bufferedImage.getWidth(), bufferedImage.getHeight(), 35);
+                bufferedImage = ImageUtil.setRadius(bufferedImage, bufferedImage.getWidth(), bufferedImage.getHeight(), 16);
                 ImageIO.write(bufferedImage, "png", avatarPath);
                 /*FileOutputStream outputStream = new FileOutputStream(avatarPath);
                 outputStream.write(data);
@@ -623,40 +623,39 @@ public class AvatarUtil
     }
 
 
-    public static void getOrLoadUserAvatarAsync(CurrentUser user, AvatarLoadedListener listener)
+    public static void getOrLoadUserAvatarAsync(String username, String headImageUrl, CurrentUser user,
+                                                AvatarLoadedListener listener)
     {
         Image avatar;
 
         // 从内存中读取头像
-        avatar = avatarCache.get(user.getUsername());
+        avatar = avatarCache.get(username);
         if (avatar != null)
         {
             listener.onSuccess(avatar);
-        }
-        else
+        } else
         {
             // 从文件缓存中读取头像
-            avatar = getCachedImageAvatar(user.getUsername());
+            avatar = getCachedImageAvatar(username);
             if (avatar != null)
             {
-                avatarCache.put(user.getUsername(), avatar);
+                avatarCache.put(username, avatar);
                 listener.onSuccess(avatar);
-            }
-            else
+            } else
             {
                 // 从服务器加载头像
                 HttpBytesGetTask task = new HttpBytesGetTask();
                 String cookie = "mm_lang=" + user.getMmLang() + "; " +
                         "refreshTimes=3; " +
-                        "wxuin="+user.getUin()+"; " +
-                        "wxloadtime="+user.getWxLoadTime()+"; " +
-                        "webwxuvid="+user.getWebwxuvid()+"; " +
-                        "webwx_auth_ticket="+user.getWebwxAuthTicket()+"; " +
+                        "wxuin=" + user.getUin() + "; " +
+                        "wxloadtime=" + user.getWxLoadTime() + "; " +
+                        "webwxuvid=" + user.getWebwxuvid() + "; " +
+                        "webwx_auth_ticket=" + user.getWebwxAuthTicket() + "; " +
                         "MM_WX_NOTIFY_STATE=1; " +
                         "MM_WX_SOUND_STATE=1; " +
                         "login_frequency=4; " +
-                        "last_wxuin="+user.getUin()+"; " +
-                        "wxsid="+user.getSid()+"; " +
+                        "last_wxuin=" + user.getUin() + "; " +
+                        "wxsid=" + user.getSid() + "; " +
                         "webwx_data_ticket=" + user.getWebwxDataTicket();
 
                 task.addHeader("Cookie", cookie);
@@ -665,12 +664,13 @@ public class AvatarUtil
                     @Override
                     public void onSuccess(byte[] data, Headers headers)
                     {
+                        System.out.println("成功获取 " + headImageUrl);
+
                         if (data != null && data.length > 0)
                         {
-                            saveAvatar(data, user.getUsername());
-                            listener.onSuccess(getCachedImageAvatar(user.getUsername()));
-                        }
-                        else
+                            saveAvatar(data, username);
+                            listener.onSuccess(getCachedImageAvatar(username));
+                        } else
                         {
                             listener.onFailed();
                         }
@@ -683,8 +683,11 @@ public class AvatarUtil
                     }
                 });
 
-                String url = "https://wx.qq.com" + user.getHeadImgUrl();
+                String url = "https://wx.qq.com" + headImageUrl;
                 task.execute(url);
+
+                System.out.println("请求头像: "+ url +", Cookie= " + cookie);
+
             }
         }
     }

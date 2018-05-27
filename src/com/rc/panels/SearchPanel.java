@@ -325,7 +325,7 @@ public class SearchPanel extends ParentAvailablePanel
         SearchResultItem item;
         for (Room room : rooms)
         {
-            item = new SearchResultItem(room.getRoomId(), room.getName(), room.getType());
+            item = new SearchResultItem(room.getUsername(), room.getNickname(), room.getType());
             retList.add(item);
         }
         return retList;

@@ -222,10 +222,10 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         Room room = roomService.findById((String) item.getTag());
         Message message = messageService.findById(item.getId());
 
-        holder.avatar.setIcon(new ImageIcon(getRoomAvatar(room.getType(), room.getName(), null)));
+        holder.avatar.setIcon(new ImageIcon(getRoomAvatar(room.getType(), room.getNickname(), null)));
         holder.brief.setKeyWord(keyWord);
         holder.brief.setText(item.getName());
-        holder.roomName.setText(room.getName());
+        holder.roomName.setText(room.getNickname());
         holder.time.setText(TimeUtil.diff(message.getTimestamp()));
 
         holder.addMouseListener(new MouseAdapter()
@@ -235,7 +235,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
             {
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    enterRoom(room.getRoomId(), message.getTimestamp());
+                    enterRoom(room.getUsername(), message.getTimestamp());
                     clearSearchText();
                 }
                 super.mouseReleased(e);
@@ -270,7 +270,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                         Room room = roomService.findRelativeRoomIdByUserId(item.getId());
                         if (room != null)
                         {
-                            String roomId = room.getRoomId();
+                            String roomId = room.getUsername();
                             enterRoom(roomId, 0L);
                         }
                         else

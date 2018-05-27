@@ -13,6 +13,7 @@ import com.rc.websocket.handler.StreamRoomMessagesHandler;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -93,18 +94,27 @@ public class RoomsPanel extends ParentAvailablePanel
         }*/
         List<Room> rooms = roomService.findAll();
 
+        String title;
         for (Room room : rooms)
         {
             RoomItem item = new RoomItem();
-            item.setRoomId(room.getRoomId());
-            item.setTimestamp(room.getLastChatAt());
-            item.setTitle(room.getName());
-            item.setType(room.getType());
+            item.setUsername(room.getUsername());
+            item.setLastChatAt(room.getLastChatAt());
+            title = room.getNickname();
+            if (room.getRemarkName() != null && room.getRemarkName().length() > 1)
+            {
+                title = room.getRemarkName();
+            }
+            item.setTitle(title);
             item.setLastMessage(room.getLastMessage());
             item.setUnreadCount(room.getUnreadCount());
+            item.setContactFlag(room.getContactFlag());
+            item.setHeadImageUrl(room.getHeadImgUrl());
 
             roomItemList.add(item);
         }
+
+        Collections.sort(roomItemList);
     }
 
     /**
@@ -131,10 +141,10 @@ public class RoomsPanel extends ParentAvailablePanel
             Room room = roomService.findById(roomId);
             for (RoomItem roomItem : roomItemList)
             {
-                if (roomItem.getRoomId().equals(roomId))
+                if (roomItem.getUsername().equals(roomId))
                 {
                     roomItem.setUnreadCount(room.getUnreadCount());
-                    roomItem.setTimestamp(room.getLastChatAt());
+                    roomItem.setLastChatAt(room.getLastChatAt());
                     roomItem.setLastMessage(room.getLastMessage());
                     break;
                 }
@@ -163,13 +173,13 @@ public class RoomsPanel extends ParentAvailablePanel
         for (int i = 0; i < roomItemList.size(); i++)
         {
             RoomItem item = roomItemList.get(i);
-            if (item.getRoomId().equals(roomId))
+            if (item.getUsername().equals(roomId))
             {
-                Room room = roomService.findById(item.getRoomId());
+                Room room = roomService.findById(item.getUsername());
                 if (room != null)
                 {
                     item.setLastMessage(room.getLastMessage());
-                    item.setTimestamp(room.getLastChatAt());
+                    item.setLastChatAt(room.getLastChatAt());
                     item.setUnreadCount(room.getUnreadCount());
                     roomItemsListView.notifyItemChanged(i);
                 }

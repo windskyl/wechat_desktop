@@ -1,9 +1,13 @@
 package com.rc.frames;
 
+import com.rc.app.Launcher;
 import com.rc.components.*;
 import com.rc.db.model.CurrentUser;
+import com.rc.db.model.Room;
 import com.rc.db.service.CurrentUserService;
+import com.rc.db.service.RoomService;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.panels.RoomsPanel;
 import com.rc.tasks.HttpBytesGetTask;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpPostTask;
@@ -11,6 +15,7 @@ import com.rc.utils.*;
 import okhttp3.Headers;
 import org.apache.ibatis.session.SqlSession;
 import com.rc.tasks.HttpResponseListener;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +56,9 @@ public class LoginFrame extends JFrame
     private boolean loginConfirmed = false;
 
     Logger logger = LoggerFactory.getLogger(LoginFrame.class);
+
+    private RoomService roomService = Launcher.roomService;
+
 
 
     public LoginFrame()
@@ -482,6 +490,10 @@ public class LoginFrame extends JFrame
                 MainFrame frame = new MainFrame();
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
+                //frame.setRoomListData(body.getJSONObject("ContactList"));
+
+                // 解析初始的房间列表
+                initRoomsData(body.getJSONArray("ContactList"));
             }
 
             @Override
@@ -525,5 +537,42 @@ public class LoginFrame extends JFrame
 
         currentUserService.deleteAll();
         currentUserService.insert(user);
+
+        Launcher.currentUser = user;
+    }
+
+    /**
+     * 解析登录后从服务器获取的初始房间列表
+     *
+     * @param contactList
+     */
+    private void initRoomsData(JSONArray contactList)
+    {
+        new Thread(() ->
+        {
+            roomService.deleteAll();
+            for (Object item : contactList)
+            {
+                Room room = new Room();
+                JSONObject obj = (JSONObject) item;
+                room.setSex(obj.getInt("Sex"));
+                room.setContactFlag(obj.getInt("ContactFlag"));
+                room.setUsername(obj.getString("UserName"));
+                room.setHeadImgUrl(obj.getString("HeadImgUrl"));
+                room.setMemberCount(obj.getInt("MemberCount"));
+                room.setCity(obj.getString("City"));
+                room.setNickname(EmojiUtil.replaseEmoji(obj.getString("NickName")));
+                room.setProvince(obj.getString("Province"));
+                room.setSnsFlag(obj.getInt("SnsFlag"));
+                room.setSignature(EmojiUtil.replaseEmoji(obj.getString("Signature")));
+                room.setRemarkName(EmojiUtil.replaseEmoji(obj.getString("RemarkName")));
+                roomService.insertOrUpdate(room);
+            }
+
+            if (RoomsPanel.getContext() != null)
+            {
+                RoomsPanel.getContext().notifyDataSetChanged(false);
+            }
+        }).start();
     }
 }

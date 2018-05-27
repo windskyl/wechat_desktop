@@ -2,6 +2,10 @@ package com.rc.utils;
 
 import javax.swing.*;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by song on 2017/7/1.
@@ -30,5 +34,48 @@ public class EmojiUtil
     public static boolean isRecognizableEmoji(Object context, String code)
     {
         return getEmoji(context, code) != null;
+    }
+
+
+    /**
+     * 提取emoji表情
+     * @param src 形如:<span class="emoji emoji1f63b">
+     * @return
+     */
+    public static List<String> extractEmojiClass(String src)
+    {
+        String regx = "emoji([0-9a-z]{5})";
+        Pattern pattern = Pattern.compile(regx);
+        Matcher matcher = pattern.matcher(src);
+        List<String> emojis = new ArrayList<>();
+
+        while (matcher.find())
+        {
+            emojis.add(matcher.group(1));
+        }
+
+        return emojis;
+    }
+
+    public static String replaseEmoji(String src)
+    {
+        String regx = "<span class=\"emoji emoji([0-9a-z]{5})\">";
+        Pattern pattern = Pattern.compile(regx);
+        Matcher matcher = pattern.matcher(src);
+        List<String> emojis = new ArrayList<>();
+
+        while (matcher.find())
+        {
+            emojis.add(matcher.group(1));
+            src = src.replaceAll(regx, matcher.group(1));
+        }
+
+        return src;
+    }
+
+
+    public static void main(String[] args)
+    {
+        System.out.println(replaseEmoji("<span class=\"emoji emoji1f63b\">asdasdsad<span class=\"emoji emoji1f63b\">"));
     }
 }

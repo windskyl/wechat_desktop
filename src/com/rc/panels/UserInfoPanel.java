@@ -139,7 +139,7 @@ public class UserInfoPanel extends ParentAvailablePanel
         // 房间已存在，直接打开，否则发送请求创建房间
         if (room != null)
         {
-            ChatPanel.getContext().enterRoom(room.getRoomId());
+            ChatPanel.getContext().enterRoom(room.getUsername());
         }else
         {
             createDirectChat(user.getName());

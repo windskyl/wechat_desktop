@@ -1,5 +1,6 @@
 package com.rc.app;
 
+import com.rc.db.model.CurrentUser;
 import com.rc.db.service.*;
 import com.rc.frames.LoginFrame;
 import com.rc.frames.MainFrame;
@@ -39,6 +40,8 @@ public class Launcher
     public static final String HOSTNAME = "https://chat1.shls-leasing.com";
     public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
     public static final String APP_VERSION = "1.0.15";
+
+    public static CurrentUser currentUser;
 
 
     public static String userHome;
@@ -140,12 +143,13 @@ public class Launcher
     private void openFrame()
     {
         // 原来登录过
-        if (checkLoginInfo())
+       /* if (checkLoginInfo())
         {
+            currentUser = currentUserService.findAll().get(0);
             currentFrame = new MainFrame();
         }
         // 从未登录过
-        else
+        else*/
         {
             currentFrame = new LoginFrame();
             currentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

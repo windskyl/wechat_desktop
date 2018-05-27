@@ -9,6 +9,7 @@ import com.rc.db.service.RoomService;
 import com.rc.entity.RoomItem;
 import com.rc.panels.ChatPanel;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarLoadedListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.TimeUtil;
 
@@ -27,6 +28,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     private List<RoomItemViewHolder> viewHolders = new ArrayList<>();
     private RoomItemViewHolder selectedViewHolder; // 当前选中的viewHolder
     private RoomService roomService = Launcher.roomService;
+    private CurrentUserService currentUserService = Launcher.currentUserService;
+    private List<RoomItemViewHolder> topViewHolderList = new ArrayList<>();
 
     public RoomItemsAdapter(List<RoomItem> roomItems)
     {
@@ -52,32 +55,34 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         {
             viewHolders.add(viewHolder);
         }
-        //viewHolder.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         RoomItem item = roomItems.get(position);
+        viewHolder.setTag(item.getUsername());
 
-        viewHolder.setTag(item.getRoomId());
+        String title = item.getTitle().length() > 12 ? item.getTitle().substring(0, 12)
+                + "..." : item.getTitle();
+        viewHolder.roomName.setText(title);
 
-        viewHolder.roomName.setText(item.getTitle());
-
-
-        ImageIcon icon = new ImageIcon();
-        // 群组头像
-        String type = item.getType();
-        if (type.equals("c") || type.equals("p"))
+        // 获取头像
+        AvatarUtil.getOrLoadUserAvatarAsync(item.getUsername(), item.getHeadImageUrl(), Launcher.currentUser,
+                new AvatarLoadedListener()
         {
-            String[] memberArr = getRoomMembers(item.getRoomId());
+            @Override
+            public void onSuccess(Image image)
+            {
+                ImageIcon icon = new ImageIcon();
+                icon.setImage(image.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                viewHolder.avatar.setIcon(icon);
+            }
 
-            icon.setImage(AvatarUtil.createOrLoadGroupAvatar(item.getTitle(), memberArr, type)
-                    .getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        }
-        // 私聊头像
-        else if (type.equals("d"))
-        {
-            Image image = AvatarUtil.createOrLoadUserAvatar(item.getTitle()).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-            icon.setImage(image);
-        }
-        viewHolder.avatar.setIcon(icon);
+            @Override
+            public void onFailed()
+            {
+                ImageIcon icon = new ImageIcon();
+                icon.setImage(AvatarUtil.getDefaultAvatar().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                viewHolder.avatar.setIcon(icon);
+            }
+        });
 
 
         // 消息
@@ -92,9 +97,9 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         }
 
         // 时间
-        if (item.getTimestamp() > 0)
+        if (item.getLastChatAt() > 0)
         {
-            viewHolder.time.setText(TimeUtil.diff(item.getTimestamp()));
+            viewHolder.time.setText(TimeUtil.diff(item.getLastChatAt()));
         }
 
         // 未读消息数
@@ -108,12 +113,13 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
             viewHolder.unreadCount.setVisible(false);
         }
 
-        // 设置是否激活
-        if (ChatPanel.CHAT_ROOM_OPEN_ID != null && item.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
+        // 是否置顶
+        if (item.getContactFlag() == 2051)
         {
-            setBackground(viewHolder, Colors.ITEM_SELECTED);
-            selectedViewHolder = viewHolder;
+            topViewHolderList.add(viewHolder);
+            setBackground(viewHolder, Colors.ITEM_STICKED);
         }
+
         //viewHolder.unreadCount.setVisible(true);
         //viewHolder.unreadCount.setText(item.getUnreadCount() + "1");
 
@@ -129,7 +135,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                     if (selectedViewHolder != viewHolder)
                     {
                         // 进入房间
-                        enterRoom(item.getRoomId());
+                        enterRoom(item.getUsername());
 
                         for (RoomItemViewHolder holder : viewHolders)
                         {
@@ -158,7 +164,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
             @Override
             public void mouseExited(MouseEvent e)
             {
-                if (selectedViewHolder != viewHolder)
+                if (selectedViewHolder != viewHolder && !topViewHolderList.contains(viewHolder))
                 {
                     setBackground(viewHolder, Colors.DARK);
                 }
@@ -169,7 +175,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     private String[] getRoomMembers(String roomId)
     {
         Room room = roomService.findById(roomId);
-        String members = room.getMember();
+        String members = "";//room.getMember();
         String[] memberArr = null;
 
         List<String> roomMembers = new ArrayList<>();
@@ -184,7 +190,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                 }
             }
         }
-        String creator = room.getCreatorName();
+        String creator = "";//room.getCreatorName();
         if (creator != null)
         {
             if (!roomMembers.equals(creator))

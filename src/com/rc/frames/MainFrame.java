@@ -11,7 +11,7 @@ import com.rc.utils.ClipboardUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
-import com.rc.websocket.WebSocketClient;
+import org.json.JSONObject;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import javax.swing.*;
@@ -69,7 +69,6 @@ public class MainFrame extends JFrame
     private TrayIcon trayIcon;
     private boolean trayFlashing = false;
     private AudioStream messageSound; //消息到来时候的提示间
-
 
     public MainFrame()
     {

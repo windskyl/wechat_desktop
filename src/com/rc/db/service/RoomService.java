@@ -22,7 +22,7 @@ public class RoomService extends BasicService<RoomDao, Room>
 
     public int insertOrUpdate(Room room)
     {
-        if (exist(room.getRoomId()))
+        if (exist(room.getUsername()))
         {
             return update(room);
         }else

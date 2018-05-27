@@ -81,23 +81,24 @@ public class MyInfoPanel extends ParentAvailablePanel
         currentUsername = currentUser.getNickName();
         avatar = new JLabel();
 
-        AvatarUtil.getOrLoadUserAvatarAsync(currentUser, new AvatarLoadedListener()
-        {
-            @Override
-            public void onSuccess(Image image)
-            {
-                ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-                avatar.setIcon(imageIcon);
-            }
+        AvatarUtil.getOrLoadUserAvatarAsync(currentUser.getUsername(), currentUser.getHeadImgUrl(), currentUser,
+                new AvatarLoadedListener()
+                {
+                    @Override
+                    public void onSuccess(Image image)
+                    {
+                        ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                        avatar.setIcon(imageIcon);
+                    }
 
-            @Override
-            public void onFailed()
-            {
-                Image defAvatar = AvatarUtil.getDefaultAvatar();
-                ImageIcon imageIcon = new ImageIcon(defAvatar.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-                avatar.setIcon(imageIcon);
-            }
-        });
+                    @Override
+                    public void onFailed()
+                    {
+                        Image defAvatar = AvatarUtil.getDefaultAvatar();
+                        ImageIcon imageIcon = new ImageIcon(defAvatar.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                        avatar.setIcon(imageIcon);
+                    }
+                });
 
 
         avatar.setPreferredSize(new Dimension(50, 50));
@@ -167,7 +168,7 @@ public class MyInfoPanel extends ParentAvailablePanel
         currentUsername = user.getUsername();
         //Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
         //avatar.setDrawImage(image);
-        AvatarUtil.getOrLoadUserAvatarAsync(user, new AvatarLoadedListener()
+        AvatarUtil.getOrLoadUserAvatarAsync(user.getUsername(), user.getHeadImgUrl(), user, new AvatarLoadedListener()
         {
             @Override
             public void onSuccess(Image image)

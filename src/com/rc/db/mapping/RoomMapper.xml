@@ -7,23 +7,61 @@
     <cache/>
 
     <insert id="insert">
-		INSERT INTO room(roomId, type, name, topic, muted, member, sysMes, msgSum, lastChatAt, creatorName, creatorId,
-		jitsiTimeout, readOnly, archived, defaultRoom, createdAt, updatedAt, unreadCount, totalReadCount, lastMessage)
-		VALUES (#{roomId},#{type},#{name},#{topic},#{muted},#{member},#{sysMes},#{msgSum},#{lastChatAt},#{creatorName},#{creatorId},
-		#{jitsiTimeout},#{readOnly},#{archived},#{defaultRoom},#{createdAt},#{updatedAt},#{unreadCount},#{totalReadCount},#{lastMessage})
+		INSERT INTO room
+		(
+            username,
+            `type`,
+            nickname,
+            memberCount,
+            msgSum,
+            lastChatAt,
+            unreadCount,
+            totalReadCount,
+            lastMessage,
+            headImgUrl,
+            signature,
+            remarkName,
+            city,
+            province,
+            sex,
+            attrStatus,
+            contactFlag,
+            snsFlag
+		)
+		VALUES
+		(
+            #{username},
+            #{type},
+            #{nickname},
+            #{memberCount},
+            #{msgSum},
+            #{lastChatAt},
+            #{unreadCount},
+            #{totalReadCount},
+            #{lastMessage},
+            #{headImgUrl},
+            #{signature},
+            #{remarkName},
+            #{city},
+            #{province},
+            #{sex},
+            #{attrStatus},
+            #{contactFlag},
+            #{snsFlag}
+		)
 	</insert>
 
 
     <select id="findById" resultType="Room">
-		SELECT * FROM room where roomId = #{id} limit 1
+		SELECT * FROM room where username = #{username} limit 1
 	</select>
 
-    <select id="findRelativeRoomIdByUserId" resultType="Room" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM room where roomId like ${condition}
+    <select id="findRelativeusernameByUserId" resultType="Room" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM room where username like ${condition}
     </select>
 
     <select id="searchByName" resultType="Room" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM room where name like ${condition} and type != 'd'
+        SELECT * FROM room where nickname like ${condition}
     </select>
 
     <select id="findAll" resultType="Room">
@@ -43,13 +81,12 @@
     </select>
 
 
-
     <select id="exist" resultType="java.lang.Integer">
-		SELECT count(1) FROM room where roomId = #{id}
+		SELECT count(1) FROM room where username = #{id}
 	</select>
 
     <delete id="delete">
-        delete from room where roomId = #{id}
+        delete from room where username = #{id}
     </delete>
 
     <delete id="deleteAll">
@@ -59,55 +96,53 @@
     <update id="update">
         UPDATE room
         <set>
-            roomId=#{roomId},
-            type=#{type},
-            name=#{name},
-            topic=#{topic},
-            muted=#{muted},
-            member=#{member},
-            sysMes=#{sysMes},
-            msgSum=#{msgSum},
-            lastChatAt=#{lastChatAt},
-            creatorName=#{creatorName},
-            creatorId=#{creatorId},
-            jitsiTimeout=#{jitsiTimeout},
-            readOnly=#{readOnly},
-            archived=#{archived},
-            defaultRoom=#{defaultRoom},
-            createdAt=#{createdAt},
-            updatedAt=#{updatedAt},
-            unreadCount=#{unreadCount},
-            totalReadCount=#{totalReadCount},
-            lastMessage=#{lastMessage},
+          username=#{username},
+          type=#{type},
+          nickname=#{nickname},
+          memberCount=#{memberCount},
+          msgSum=#{msgSum},
+          lastChatAt=#{lastChatAt},
+          unreadCount=#{unreadCount},
+          totalReadCount=#{totalReadCount},
+          lastMessage=#{lastMessage},
+          headImgUrl=#{headImgUrl},
+          signature=#{signature},
+          remarkName=#{remarkName},
+          city=#{city},
+          province=#{province},
+          sex=#{sex},
+          attrStatus=#{attrStatus},
+          contactFlag=#{contactFlag},
+          snsFlag=#{snsFlag},
         </set>
-        WHERE roomId=#{roomId}
+        WHERE username=#{username}
     </update>
 
     <update id="updateIgnoreNull">
         UPDATE room
         <set>
-            <if test="roomId!= null">roomId=#{roomId},</if>
-            <if test="type!= null">type=#{type},</if>
-            <if test="name!= null">name=#{name},</if>
-            <if test="topic!= null">topic=#{topic},</if>
-            <if test="muted!= null">muted=#{muted},</if>
-            <if test="member!= null">member=#{member},</if>
-            <if test="sysMes!= null">sysMes=#{sysMes},</if>
-            <if test="msgSum!= null">msgSum=#{msgSum},</if>
-            <if test="lastChatAt!= null">lastChatAt=#{lastChatAt},</if>
-            <if test="creatorName!= null">creatorName=#{creatorName},</if>
-            <if test="creatorId!= null">creatorId=#{creatorId},</if>
-            <if test="jitsiTimeout!= null">jitsiTimeout=#{jitsiTimeout},</if>
-            <if test="readOnly!= null">readOnly=#{readOnly},</if>
-            <if test="archived!= null">archived=#{archived},</if>
-            <if test="defaultRoom!= null">defaultRoom=#{defaultRoom},</if>
-            <if test="createdAt!= null">createdAt=#{createdAt},</if>
-            <if test="updatedAt!= null">updatedAt=#{updatedAt},</if>
-            <if test="unreadCount!= null">unreadCount=#{unreadCount},</if>
-            <if test="totalReadCount!= null">totalReadCount=#{totalReadCount},</if>
-            <if test="lastMessage!= null">lastMessage=#{lastMessage},</if>
+
+
+            <if test="username != null">username=#{username},</if>
+            <if test="type != null">type=#{type},</if>
+            <if test="nickname != null">nickname=#{nickname},</if>
+            <if test="memberCount != null">memberCount=#{memberCount},</if>
+            <if test="msgSum != null">msgSum=#{msgSum},</if>
+            <if test="lastChatAt != null">lastChatAt=#{lastChatAt},</if>
+            <if test="unreadCount != null">unreadCount=#{unreadCount},</if>
+            <if test="totalReadCount != null">totalReadCount=#{totalReadCount},</if>
+            <if test="lastMessage != null">lastMessage=#{lastMessage},</if>
+            <if test="headImgUrl != null">headImgUrl=#{headImgUrl},</if>
+            <if test="signature != null">signature=#{signature},</if>
+            <if test="remarkName != null">remarkName=#{remarkName},</if>
+            <if test="city != null">city=#{city},</if>
+            <if test="province != null">province=#{province},</if>
+            <if test="sex != null">sex=#{sex},</if>
+            <if test="attrStatus != null">attrStatus=#{attrStatus},</if>
+            <if test="contactFlag != null">contactFlag=#{contactFlag},</if>
+            <if test="snsFlag != null">snsFlag=#{snsFlag},</if>
         </set>
-        WHERE roomId=#{roomId}
+        WHERE username=#{username}
     </update>
 </mapper>
 

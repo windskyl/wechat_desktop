@@ -10,45 +10,34 @@ package com.rc.db.model;
 
 public class Room extends BasicModel implements Comparable<Room>
 {
-    private String roomId;
+
+    private String username;
     private String type;
-    private String name;
-    private String topic;
-    private String muted;
-    private String member;
-    private boolean sysMes;
-    private int msgSum;
+    private String nickname;
+    private int memberCount;
+    private long msgSum;
     private long lastChatAt;
-    private String creatorName;
-    private String creatorId;
-    private String jitsiTimeout;
-    private boolean readOnly;
-    private boolean archived;
-    private boolean defaultRoom;
-    private String createdAt;
-    private String updatedAt;
-    private int unreadCount;
-    private int totalReadCount;
+    private long unreadCount;
+    private long totalReadCount;
     private String lastMessage;
+    private String headImgUrl;
+    private String signature;
+    private String remarkName;
+    private String city;
+    private String province;
+    private int sex;
+    private int attrStatus;
+    private int contactFlag;
+    private int snsFlag;
 
-
-    public int getUnreadCount()
+    public String getUsername()
     {
-        return unreadCount;
+        return username;
     }
 
-    public void setUnreadCount(int unreadCount)
+    public void setUsername(String username)
     {
-        this.unreadCount = unreadCount;
-    }
-    public String getRoomId()
-    {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId)
-    {
-        this.roomId = roomId;
+        this.username = username;
     }
 
     public String getType()
@@ -61,62 +50,32 @@ public class Room extends BasicModel implements Comparable<Room>
         this.type = type;
     }
 
-    public String getName()
+    public String getNickname()
     {
-        return name;
+        return nickname;
     }
 
-    public void setName(String name)
+    public void setNickname(String nickname)
     {
-        this.name = name;
+        this.nickname = nickname;
     }
 
-    public String getTopic()
+    public int getMemberCount()
     {
-        return topic;
+        return memberCount;
     }
 
-    public void setTopic(String topic)
+    public void setMemberCount(int memberCount)
     {
-        this.topic = topic;
+        this.memberCount = memberCount;
     }
 
-    public String getMuted()
-    {
-        return muted;
-    }
-
-    public void setMuted(String muted)
-    {
-        this.muted = muted;
-    }
-
-    public String getMember()
-    {
-        return member;
-    }
-
-    public void setMember(String member)
-    {
-        this.member = member;
-    }
-
-    public boolean isSysMes()
-    {
-        return sysMes;
-    }
-
-    public void setSysMes(boolean sysMes)
-    {
-        this.sysMes = sysMes;
-    }
-
-    public int getMsgSum()
+    public long getMsgSum()
     {
         return msgSum;
     }
 
-    public void setMsgSum(int msgSum)
+    public void setMsgSum(long msgSum)
     {
         this.msgSum = msgSum;
     }
@@ -131,124 +90,24 @@ public class Room extends BasicModel implements Comparable<Room>
         this.lastChatAt = lastChatAt;
     }
 
-    public String getCreatorName()
+    public long getUnreadCount()
     {
-        return creatorName;
+        return unreadCount;
     }
 
-    public void setCreatorName(String creatorName)
+    public void setUnreadCount(long unreadCount)
     {
-        this.creatorName = creatorName;
+        this.unreadCount = unreadCount;
     }
 
-    public String getCreatorId()
+    public long getTotalReadCount()
     {
-        return creatorId;
+        return totalReadCount;
     }
 
-    public void setCreatorId(String creatorId)
+    public void setTotalReadCount(long totalReadCount)
     {
-        this.creatorId = creatorId;
-    }
-
-    public String getJitsiTimeout()
-    {
-        return jitsiTimeout;
-    }
-
-    public void setJitsiTimeout(String jitsiTimeout)
-    {
-        this.jitsiTimeout = jitsiTimeout;
-    }
-
-    public boolean isReadOnly()
-    {
-        return readOnly;
-    }
-
-    public void setReadOnly(boolean readOnly)
-    {
-        this.readOnly = readOnly;
-    }
-
-    public boolean isArchived()
-    {
-        return archived;
-    }
-
-    public void setArchived(boolean archived)
-    {
-        this.archived = archived;
-    }
-
-    public boolean isDefaultRoom()
-    {
-        return defaultRoom;
-    }
-
-    public void setDefaultRoom(boolean defaultRoom)
-    {
-        this.defaultRoom = defaultRoom;
-    }
-
-    public String getCreatedAt()
-    {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt)
-    {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt()
-    {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt)
-    {
-        this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Room{" +
-                "roomId='" + roomId + '\'' +
-                ", type='" + type + '\'' +
-                ", name='" + name + '\'' +
-                ", topic='" + topic + '\'' +
-                ", muted='" + muted + '\'' +
-                ", member='" + member + '\'' +
-                ", sysMes=" + sysMes +
-                ", msgSum=" + msgSum +
-                ", lastChatAt=" + lastChatAt +
-                ", creatorName='" + creatorName + '\'' +
-                ", creatorId='" + creatorId + '\'' +
-                ", jitsiTimeout='" + jitsiTimeout + '\'' +
-                ", readOnly=" + readOnly +
-                ", archived=" + archived +
-                ", defaultRoom=" + defaultRoom +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", unreadCount=" + unreadCount +
-                ", totalReadCount=" + totalReadCount +
-                ", lastMessage='" + lastMessage + '\'' +
-                '}';
-    }
-
-    @Override
-    public int compareTo(Room o)
-    {
-        if (this.getType().equals(o.getType()))
-        {
-            return (int)(this.getLastChatAt() - o.getLastChatAt());
-        }
-        else
-        {
-            return this.getType().compareTo(o.getType());
-        }
+        this.totalReadCount = totalReadCount;
     }
 
     public String getLastMessage()
@@ -261,14 +120,108 @@ public class Room extends BasicModel implements Comparable<Room>
         this.lastMessage = lastMessage;
     }
 
-    public int getTotalReadCount()
+    public String getHeadImgUrl()
     {
-        return totalReadCount;
+        return headImgUrl;
     }
 
-    public void setTotalReadCount(int totalReadCount)
+    public void setHeadImgUrl(String headImgUrl)
     {
-        this.totalReadCount = totalReadCount;
+        this.headImgUrl = headImgUrl;
+    }
+
+    public String getSignature()
+    {
+        return signature;
+    }
+
+    public void setSignature(String signature)
+    {
+        this.signature = signature;
+    }
+
+    public String getRemarkName()
+    {
+        return remarkName;
+    }
+
+    public void setRemarkName(String remarkName)
+    {
+        this.remarkName = remarkName;
+    }
+
+    public String getCity()
+    {
+        return city;
+    }
+
+    public void setCity(String city)
+    {
+        this.city = city;
+    }
+
+    public String getProvince()
+    {
+        return province;
+    }
+
+    public void setProvince(String province)
+    {
+        this.province = province;
+    }
+
+    public int getSex()
+    {
+        return sex;
+    }
+
+    public void setSex(int sex)
+    {
+        this.sex = sex;
+    }
+
+    public int getAttrStatus()
+    {
+        return attrStatus;
+    }
+
+    public void setAttrStatus(int attrStatus)
+    {
+        this.attrStatus = attrStatus;
+    }
+
+    public int getContactFlag()
+    {
+        return contactFlag;
+    }
+
+    public void setContactFlag(int contactFlag)
+    {
+        this.contactFlag = contactFlag;
+    }
+
+    public int getSnsFlag()
+    {
+        return snsFlag;
+    }
+
+    public void setSnsFlag(int snsFlag)
+    {
+        this.snsFlag = snsFlag;
+    }
+
+
+    @Override
+    public int compareTo(Room o)
+    {
+        if (this.getType().equals(o.getType()))
+        {
+            return (int)(this.getLastChatAt() - o.getLastChatAt());
+        }
+        else
+        {
+            return this.getType().compareTo(o.getType());
+        }
     }
 }
 

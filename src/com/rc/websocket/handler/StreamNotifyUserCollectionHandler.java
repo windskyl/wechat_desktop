@@ -148,25 +148,25 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
             {
                 Room room = new Room();
                 room.setLastChatAt(0);
-                room.setName(obj.getString("name"));
+                room.setNickname(obj.getString("name"));
                 room.setType(obj.getString("t"));
-                room.setRoomId(obj.getString("rid"));
+                room.setUsername(obj.getString("rid"));
                 // room.setCreatorId(obj.getJSONObject("u").getString("_id"));
                 String username = obj.getJSONObject("u").getString("username");
                 // 我主动创建
                 if (SubscriptionHelper.lastCreateDirectChatUsername != null
-                        && SubscriptionHelper.lastCreateDirectChatUsername.equals(room.getName()))
+                        && SubscriptionHelper.lastCreateDirectChatUsername.equals(room.getNickname()))
                 {
-                    room.setCreatorName(username);
+                    //room.setCreatorName(username);
                     SubscriptionHelper.lastCreateDirectChatUsername = null;
                 }
                 // 对方主动创建
                 else
                 {
-                    room.setCreatorName(room.getName());
+                    //room.setCreatorName(room.getName());
                 }
 
-                room.setUpdatedAt(String.valueOf(obj.getJSONObject("_updatedAt").getLong("$date")));
+                //room.setUpdatedAt(String.valueOf(obj.getJSONObject("_updatedAt").getLong("$date")));
 
                 //roomService.insertOrUpdate(Realm.getDefaultInstance(), room);
                 roomService.insertOrUpdate(room);
@@ -228,14 +228,14 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
             boolean ro = obj.getBoolean("ro");
 
             Room room = new Room();
-            room.setName(roomName);
+           /* room.setName(roomName);
             room.setType(t);
-            room.setRoomId(roomId);
+            room.setUsername(roomId);
             room.setCreatorId(creatorId);
             room.setCreatorName(creatorUsername);
             room.setUpdatedAt("0");
             room.setLastChatAt(0);
-            room.setReadOnly(ro);
+            room.setReadOnly(ro);*/
             room.setLastChatAt(System.currentTimeMillis());
 
             //roomService.insertOrUpdate(Realm.getDefaultInstance(), room);
@@ -257,10 +257,10 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
             }
             realm.close();*/
 
-            if (!room.getCreatorName().equals(currentUserService.findAll().get(0).getUsername()))
+           /* if (!room.getCreatorName().equals(currentUserService.findAll().get(0).getUsername()))
             {
                 showDefaultNotification(room.getRoomId(), room.getType(), room.getName(), creatorUsername + "邀请你进入群聊：" + room.getName());
-            }
+            }*/
         }
 
         // 房间信息更新
@@ -286,31 +286,31 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
                             {
                                 handleNewUserAdded(mutedUser);
                             }
-                            room.setMuted(mutedUser.join(","));
+                            //room.setMuted(mutedUser.join(","));
                         }
                         else
                         {
-                            room.setMuted(null);
+                            //room.setMuted(null);
                         }
                     }
                     else
                     {
-                        room.setMuted(null);
+                        //room.setMuted(null);
                     }
 
                     if (obj.has("ro"))
                     {
-                        room.setReadOnly(obj.getBoolean("ro"));
+                       // room.setReadOnly(obj.getBoolean("ro"));
                     }
 
                     //roomService.insertOrUpdate(Realm.getDefaultInstance(), room);
                     roomService.insertOrUpdate(room);
                     //this.webSocketService.sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, WebSocketService.EVENT_MUTED);
 
-                    if (room.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
+                   /* if (room.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
                     {
                         ChatPanel.getContext().checkIsMuted();
-                    }
+                    }*/
 
                     // 重新获取群成员
                     //ChatPanel.getContext().loadRemoteRoomMembers();
@@ -334,11 +334,11 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
 
         for (int i = 0; i < users.length(); i++)
         {
-            if (room.getMuted().indexOf("\"" + users.getString(i) + "\"") < 0)
+            /*if (room.getMuted().indexOf("\"" + users.getString(i) + "\"") < 0)
             {
                 //String newUsername = users.getString(i);
                 webSocketService.updateContactsUser();
-            }
+            }*/
         }
 
         //realm.close();
@@ -359,10 +359,10 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
     {
         try
         {
-            subscriptionHelper.subscriptionStreamNotifyRoomDeleteMessage(room.getRoomId());
+            /*subscriptionHelper.subscriptionStreamNotifyRoomDeleteMessage(room.getRoomId());
             subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
             subscriptionHelper.subscriptionStreamNotifyRoomWebrtc(room.getRoomId());
-            subscriptionHelper.subscriptionStreamRoomMessages(room.getRoomId());
+            subscriptionHelper.subscriptionStreamRoomMessages(room.getRoomId());*/
         }
         catch (Exception e)
         {
@@ -384,11 +384,11 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
             CreateGroupDialog.getContext().setVisible(false);
         }
         // 如果是我创建的群聊，打打开窗口
-        if (room.getCreatorName().equals(currentUserService.findAll().get(0).getUsername()))
+        //if (room.getCreatorName().equals(currentUserService.findAll().get(0).getUsername()))
         {
             // 通知UI打开聊天窗口
             logger.debug("通知UI打开聊天窗口");
-            ChatPanel.getContext().enterRoom(room.getRoomId());
+            //ChatPanel.getContext().enterRoom(room.getRoomId());
 
             // 激活左侧房间列表
             //RoomsPanel.getContext().activeItem(0);

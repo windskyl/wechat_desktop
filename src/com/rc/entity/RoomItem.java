@@ -7,21 +7,24 @@ package com.rc.entity;
 
 public class RoomItem implements Comparable<RoomItem>
 {
-    private String roomId;
-    private String title;
-    private String lastMessage;
-    private int unreadCount;
-    private long timestamp;
-    private String type;
 
-    public String getRoomId()
+    private String username;
+    private String title;
+    private long lastChatAt;
+    private long unreadCount;
+    private String lastMessage;
+    private int contactFlag;
+    private String headImageUrl;
+
+
+    public String getUsername()
     {
-        return roomId;
+        return username;
     }
 
-    public void setRoomId(String roomId)
+    public void setUsername(String username)
     {
-        this.roomId = roomId;
+        this.username = username;
     }
 
     public String getTitle()
@@ -34,6 +37,26 @@ public class RoomItem implements Comparable<RoomItem>
         this.title = title;
     }
 
+    public long getLastChatAt()
+    {
+        return lastChatAt;
+    }
+
+    public void setLastChatAt(long lastChatAt)
+    {
+        this.lastChatAt = lastChatAt;
+    }
+
+    public long getUnreadCount()
+    {
+        return unreadCount;
+    }
+
+    public void setUnreadCount(long unreadCount)
+    {
+        this.unreadCount = unreadCount;
+    }
+
     public String getLastMessage()
     {
         return lastMessage;
@@ -44,55 +67,37 @@ public class RoomItem implements Comparable<RoomItem>
         this.lastMessage = lastMessage;
     }
 
-    public int getUnreadCount()
-    {
-        return unreadCount;
-    }
-
-    public void setUnreadCount(int unreadCount)
-    {
-        this.unreadCount = unreadCount;
-    }
-
-    public long getTimestamp()
-    {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp)
-    {
-        this.timestamp = timestamp;
-    }
-
-
-    @Override
-    public String toString()
-    {
-        return "RoomItem{" +
-                "roomId='" + roomId + '\'' +
-                ", title='" + title + '\'' +
-                ", lastMessage='" + lastMessage + '\'' +
-                ", unreadCount=" + unreadCount +
-                ", timestamp='" + timestamp + '\'' +
-                '}';
-    }
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType(String type)
-    {
-        this.type = type;
-    }
-
     @Override
     public int compareTo(RoomItem o)
     {
         // 注意，不能强制转int, 两个时间相差太远时有可能溢出
         // 忽略结果为0的情况，两个item必有先后，没有相同
-        long ret = o.getTimestamp() - this.getTimestamp();
+        if (this.contactFlag != o.contactFlag)
+        {
+            return o.contactFlag - this.contactFlag;
+        }
+
+        long ret = o.getLastChatAt() - this.getLastChatAt();
         return ret > 0 ? 1 : -1;
+    }
+
+    public int getContactFlag()
+    {
+        return contactFlag;
+    }
+
+    public void setContactFlag(int contactFlag)
+    {
+        this.contactFlag = contactFlag;
+    }
+
+    public String getHeadImageUrl()
+    {
+        return headImageUrl;
+    }
+
+    public void setHeadImageUrl(String headImageUrl)
+    {
+        this.headImageUrl = headImageUrl;
     }
 }

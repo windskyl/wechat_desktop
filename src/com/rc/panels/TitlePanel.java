@@ -240,7 +240,7 @@ public class TitlePanel extends ParentAvailablePanel
 
         titleLabel = new JLabel();
         titleLabel.setFont(FontUtil.getDefaultFont(16));
-        titleLabel.setText("和理通");
+        titleLabel.setText("假微信");
         //titleLabel.setCursor(handCursor);
 
 

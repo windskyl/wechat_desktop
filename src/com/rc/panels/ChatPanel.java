@@ -677,7 +677,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     public void updateRoomTitle()
     {
-        String title = room.getName();
+        String title = room.getNickname();
         if (!room.getType().equals("d"))
         {
             // 加载本地群成员
@@ -801,7 +801,7 @@ public class ChatPanel extends ParentAvailablePanel
                     Room room = roomService.findById(roomId);
 
                     // 总消息数小于10，继续拿
-                    if (messageService.countByRoom(room.getRoomId()) < 10)
+                    if (messageService.countByRoom(room.getUsername()) < 10)
                     {
                         long lastStartTime = loadRemoteStartTime - 1;
                         loadRemoteStartTime = loadRemoteStartTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
@@ -849,7 +849,7 @@ public class ChatPanel extends ParentAvailablePanel
         roomService.update(room);
 
         // 通知UI更新未读消息数
-        RoomsPanel.getContext().updateRoomItem(room.getRoomId());
+        RoomsPanel.getContext().updateRoomItem(room.getUsername());
     }
 
 
@@ -904,7 +904,7 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onFailed()
             {
-                System.out.println("消息获取失败：" + room.getName());
+                System.out.println("消息获取失败：" + room.getNickname());
             }
         });
 
@@ -2082,7 +2082,7 @@ public class ChatPanel extends ParentAvailablePanel
     public void loadLocalRoomMembers()
     {
         roomMembers.clear();
-        String members = room.getMember();
+        String members = "";//room.getMember();
 
         if (members != null)
         {
@@ -2107,18 +2107,18 @@ public class ChatPanel extends ParentAvailablePanel
             remoteRoomMemberLoadedRooms.add(roomId);
         }
 
-        logger.debug("远程获取房间 " + room.getName() + " 的群成员");
+        logger.debug("远程获取房间 " + room.getNickname() + " 的群成员");
         String url = null;
         String arrayName = "";
         //room = roomService.findById(roomId);
         if (room.getType().equals("c"))
         {
-            url = Launcher.HOSTNAME + "/api/v1/channels.info?roomId=" + room.getRoomId();
+            url = Launcher.HOSTNAME + "/api/v1/channels.info?roomId=" + room.getUsername();
             arrayName = "channel";
         }
         else if (room.getType().equals("p"))
         {
-            url = Launcher.HOSTNAME + "/api/v1/groups.info?roomId=" + room.getRoomId();
+            url = Launcher.HOSTNAME + "/api/v1/groups.info?roomId=" + room.getUsername();
             arrayName = "group";
         }
         else if (room.getType().equals("d"))
@@ -2151,7 +2151,7 @@ public class ChatPanel extends ParentAvailablePanel
                             newUserAdded = true;
                         }
                         //roomService.updateCreatorUsername(Realm.getDefaultInstance(), room.getRoomId(), creator);
-                        room.setCreatorName(creator);
+                        //room.setCreatorName(creator);
                         roomService.update(room);
                     }
 
@@ -2200,9 +2200,9 @@ public class ChatPanel extends ParentAvailablePanel
                         }
 
                         // 重新生成群头像
-                        System.out.println("删除原来群头像: " + room.getName());
+                        System.out.println("删除原来群头像: " + room.getNickname());
                         //AvatarUtil.deleteGroupAvatar(room.getName());
-                        AvatarUtil.createGroupAvatar(room.getName(), roomMembers.toArray(new String[]{}));
+                        AvatarUtil.createGroupAvatar(room.getNickname(), roomMembers.toArray(new String[]{}));
                     }
 
                     //roomMembers.remove(creator);
@@ -2218,7 +2218,7 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onFailed()
             {
-                System.out.println("成员获取失败：" + room.getName());
+                System.out.println("成员获取失败：" + room.getNickname());
             }
         });
 
@@ -2242,7 +2242,7 @@ public class ChatPanel extends ParentAvailablePanel
             }
         }
 
-        room.setMember(sb.toString());
+        //room.setMember(sb.toString());
         roomService.update(room);
 
         //loadLocalRoomMembers();
@@ -2259,7 +2259,7 @@ public class ChatPanel extends ParentAvailablePanel
      */
     public void checkIsMuted()
     {
-        room = roomService.findById(roomId);
+        /*room = roomService.findById(roomId);
         if (room.getMuted() != null && room.getMuted().indexOf("\"" + currentUser.getUsername() + "\"") > -1)
         {
             messageEditorPanel.setVisible(false);
@@ -2267,7 +2267,7 @@ public class ChatPanel extends ParentAvailablePanel
         else
         {
             messageEditorPanel.setVisible(true);
-        }
+        }*/
     }
 
     /**

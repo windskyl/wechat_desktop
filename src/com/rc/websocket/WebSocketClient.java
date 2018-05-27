@@ -585,10 +585,10 @@ public class WebSocketClient
                                 continue;
                             }
                             newlyRoomIds.add(obj.getString("_id"));
-                            room.setRoomId(obj.getString("_id"));
+                            //room.setRoomId(obj.getString("_id"));
                             if (obj.has("ro"))
                             {
-                                room.setReadOnly(obj.getBoolean("ro"));
+                                //room.setReadOnly(obj.getBoolean("ro"));
 
                                 if (obj.has("muted"))
                                 {
@@ -596,36 +596,36 @@ public class WebSocketClient
                                     if (mutedUser.length() > 0)
                                     {
                                         String str = mutedUser.join(",");
-                                        room.setMuted(str);
+                                        //room.setMuted(str);
                                     }
                                 }
                             }
                             if (obj.has("name"))
                             {
-                                room.setName(obj.getString("name"));
+                                //room.setName(obj.getString("name"));
                             }
-                            room.setUpdatedAt(obj.getString("_updatedAt"));
+                            //room.setUpdatedAt(obj.getString("_updatedAt"));
 
                             if (obj.has("u"))
                             {
-                                room.setCreatorId(obj.getJSONObject("u").getString("_id"));
-                                room.setCreatorName(obj.getJSONObject("u").getString("username"));
+                                //room.setCreatorId(obj.getJSONObject("u").getString("_id"));
+                                //room.setCreatorName(obj.getJSONObject("u").getString("username"));
                             }
                             if (obj.has("usernames"))
                             {
                                 JSONArray usernameArr = obj.getJSONArray("usernames");
                                 if (usernameArr.get(0).equals(currentUsername))
                                 {
-                                    room.setName(usernameArr.get(1).toString());
+                                   // room.setName(usernameArr.get(1).toString());
                                 }
                                 else
                                 {
-                                    room.setName(usernameArr.get(0).toString());
+                                   // room.setName(usernameArr.get(0).toString());
                                 }
                             }
                             room.setType(finalRoomType);
 
-                            Room oldRoom = roomService.findById(room.getRoomId());
+                            /*Room oldRoom = roomService.findById(room.getRoomId());
                             if (oldRoom != null)
                             {
                                 room.setMsgSum(oldRoom.getMsgSum());
@@ -634,12 +634,12 @@ public class WebSocketClient
                                 room.setCreatorName(oldRoom.getCreatorName());
                                 room.setLastChatAt(oldRoom.getLastChatAt());
 
-                                /*if (oldRoom.getTotalReadCount() < 0)
+                                *//*if (oldRoom.getTotalReadCount() < 0)
                                 {
                                     System.out.println("oldRoom.getTotalReadCount()" + oldRoom.getTotalReadCount());
-                                }*/
+                                }*//*
                                 room.setTotalReadCount(oldRoom.getTotalReadCount());
-                            }
+                            }*/
 
                             roomService.insertOrUpdate(room);
                         }
@@ -650,10 +650,10 @@ public class WebSocketClient
                     List<Room> dbRooms = roomService.find("type", finalRoomType);
                     for (Room r : dbRooms)
                     {
-                        if (!newlyRoomIds.contains(r.getRoomId()))
+                       /* if (!newlyRoomIds.contains(r.getRoomId()))
                         {
                             roomService.delete(r.getRoomId());
-                        }
+                        }*/
                     }
 
                    /* List<Room> rooms = roomService.findAll();
@@ -709,11 +709,11 @@ public class WebSocketClient
         List<Room> rooms = roomService.find("type", roomType);
         for (Room room : rooms)
         {
-            subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
+            /*subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
             subscriptionHelper.subscriptionStreamRoomMessages(room.getRoomId());
             subscriptionHelper.subscriptionUserRoomsChanged(room.getRoomId());
             subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
-            subscriptionHelper.subscriptionStreamNotifyRoomWebrtc(room.getRoomId());
+            subscriptionHelper.subscriptionStreamNotifyRoomWebrtc(room.getRoomId());*/
         }
     }
 
@@ -733,7 +733,7 @@ public class WebSocketClient
                 for (Room r : rooms)
                 {
                     //updatedUnreadMessageRoomsCount++;
-                    subscriptionHelper.sendLoadUnreadCountAndLastMessage(r.getRoomId());
+                    //subscriptionHelper.sendLoadUnreadCountAndLastMessage(r.getRoomId());
                 }
             }
         }).start();
