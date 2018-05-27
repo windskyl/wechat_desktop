@@ -58,7 +58,6 @@ public class AvatarUtil
 
     static
     {
-        //AVATAR_CACHE_ROOT = new Object().getClass().getResource("/cache").getPath() + "/avatar";
         AVATAR_CACHE_ROOT = Launcher.appFilesBasePath + "/cache/avatar";
 
         File file = new File(AVATAR_CACHE_ROOT);
@@ -117,27 +116,6 @@ public class AvatarUtil
 
         return avatar;
     }
-
-
-    /*public static Image createOrLoadGroupAvatar(String sign, String name)
-    {
-        Image avatar;
-        avatar = avatarCache.get(sign);
-
-        if (avatar == null)
-        {
-            avatar = getCachedImageAvatar(sign);
-            if (avatar == null)
-            {
-                System.out.println("创建群组头像");
-                avatar = createAvatar(sign, name);
-            }
-
-            avatarCache.put(sign, avatar);
-        }
-
-        return avatar;
-    }*/
 
 
     public static Image createOrLoadUserAvatar(String username)
@@ -284,16 +262,19 @@ public class AvatarUtil
             return imageIcon.getImage();*/
 
             return readImage(path);
-        } else if (defaultAvatarExist(username))
+        }
+
+        return null;
+        /*else if (defaultAvatarExist(username))
         {
             String path = AVATAR_CACHE_ROOT + "/" + username + ".png";
-            /*ImageIcon imageIcon = new ImageIcon(path);
-            return imageIcon.getImage();*/
+            *//*ImageIcon imageIcon = new ImageIcon(path);
+            return imageIcon.getImage();*//*
             return readImage(path);
         } else
         {
             return null;
-        }
+        }*/
     }
 
     private static BufferedImage readImage(String path)
@@ -642,17 +623,27 @@ public class AvatarUtil
     }
 
 
-    public static Image getOrLoadUserAvatar(CurrentUser user)
+    public static void getOrLoadUserAvatarAsync(CurrentUser user, AvatarLoadedListener listener)
     {
         Image avatar;
 
+        // 从内存中读取头像
         avatar = avatarCache.get(user.getUsername());
-        if (avatar == null)
+        if (avatar != null)
         {
+            listener.onSuccess(avatar);
+        }
+        else
+        {
+            // 从文件缓存中读取头像
             avatar = getCachedImageAvatar(user.getUsername());
-            if (avatar == null)
+            if (avatar != null)
             {
-                //avatar = createAvatar(username, username);
+                avatarCache.put(user.getUsername(), avatar);
+                listener.onSuccess(avatar);
+            }
+            else
+            {
                 // 从服务器加载头像
                 HttpBytesGetTask task = new HttpBytesGetTask();
                 String cookie = "mm_lang=" + user.getMmLang() + "; " +
@@ -668,35 +659,39 @@ public class AvatarUtil
                         "wxsid="+user.getSid()+"; " +
                         "webwx_data_ticket=" + user.getWebwxDataTicket();
 
-                //cookie = "mm_lang=zh_CN; refreshTimes=5; wxuin=1023459521; wxloadtime=1527351233_expired; webwxuvid=358e049e0960146d2e7dfa3e04dcf77f4310e1388d19033b66301f75aa6f8681323e968e033a73a772ebe36dce66f07f; webwx_auth_ticket=CIsBELD2o+UCGoABm/a0+eTx0/CyEXTHbGm2TDTpSJDPVMBkdqgacfpwcLIPE7OBQzIKyBucwmRih76w3SqxRxYZAiUlI/gpCh8SUfPwh5YumCUlaaBfuNx6DSsemAKWDVBzLbRMAgl9DkHMpRpeR8oImSOBbGW39YrRLhVDht6+Fr3/tJ3JLAc3XeY=; wxpluginkey=1527341762; login_frequency=1; last_wxuin=1023459521; MM_WX_NOTIFY_STATE=1; MM_WX_SOUND_STATE=1; wxsid=JCj5w4PznFEJgNtR; webwx_data_ticket=gSfP0Z6odOwPdDtwLZC69oMB";
                 task.addHeader("Cookie", cookie);
                 task.setListener(new HttpResponseListener<byte[]>()
                 {
                     @Override
                     public void onSuccess(byte[] data, Headers headers)
                     {
-                        saveAvatar(data, user.getUsername());
+                        if (data != null && data.length > 0)
+                        {
+                            saveAvatar(data, user.getUsername());
+                            listener.onSuccess(getCachedImageAvatar(user.getUsername()));
+                        }
+                        else
+                        {
+                            listener.onFailed();
+                        }
                     }
 
                     @Override
                     public void onFailed()
                     {
-
+                        listener.onFailed();
                     }
                 });
 
                 String url = "https://wx.qq.com" + user.getHeadImgUrl();
                 task.execute(url);
             }
-
-            avatarCache.put(user.getUsername(), avatar);
         }
-
-        return avatar;
     }
 
-    public static void main(String[] a)
+    public static Image getDefaultAvatar()
     {
-        System.out.println(AvatarUtil.createAvatar("song", "song"));
+        BufferedImage def = readImage(AVATAR_CACHE_ROOT + File.separator + "default.png");
+        return def;
     }
 }

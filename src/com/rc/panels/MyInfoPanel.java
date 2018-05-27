@@ -9,6 +9,7 @@ import com.rc.db.service.CurrentUserService;
 import com.rc.frames.MainFrame;
 import com.rc.frames.SystemConfigDialog;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarLoadedListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import org.omg.CORBA.Current;
@@ -80,9 +81,24 @@ public class MyInfoPanel extends ParentAvailablePanel
         currentUsername = currentUser.getNickName();
         avatar = new JLabel();
 
-        AvatarUtil.getOrLoadUserAvatar(currentUser);//.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-        //ImageIcon imageIcon = new ImageIcon();
-        //avatar.setIcon(imageIcon);
+        AvatarUtil.getOrLoadUserAvatarAsync(currentUser, new AvatarLoadedListener()
+        {
+            @Override
+            public void onSuccess(Image image)
+            {
+                ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                avatar.setIcon(imageIcon);
+            }
+
+            @Override
+            public void onFailed()
+            {
+                Image defAvatar = AvatarUtil.getDefaultAvatar();
+                ImageIcon imageIcon = new ImageIcon(defAvatar.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                avatar.setIcon(imageIcon);
+            }
+        });
+
 
         avatar.setPreferredSize(new Dimension(50, 50));
         avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -151,10 +167,23 @@ public class MyInfoPanel extends ParentAvailablePanel
         currentUsername = user.getUsername();
         //Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
         //avatar.setDrawImage(image);
-        avatar.setIcon(new ImageIcon(AvatarUtil.getOrLoadUserAvatar(user).getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
+        AvatarUtil.getOrLoadUserAvatarAsync(user, new AvatarLoadedListener()
+        {
+            @Override
+            public void onSuccess(Image image)
+            {
+                avatar.setIcon(new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
 
-        avatar.revalidate();
-        avatar.repaint();
+                avatar.revalidate();
+                avatar.repaint();
+            }
+
+            @Override
+            public void onFailed()
+            {
+
+            }
+        });
     }
 
     public static MyInfoPanel getContext()

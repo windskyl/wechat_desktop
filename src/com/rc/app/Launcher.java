@@ -157,7 +157,7 @@ public class Launcher
     {
         userHome = System.getProperty("user.home");
 
-        appFilesBasePath = userHome + System.getProperty("file.separator") + "Helichat";
+        appFilesBasePath = userHome + System.getProperty("file.separator") + ".wechat";
     }
 
     private boolean checkLoginInfo()
