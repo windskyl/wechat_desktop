@@ -99,8 +99,14 @@ public class ContactsPanel extends ParentAvailablePanel
                 continue;
             }
 
+            String title = contacts.getNickName();
+            if (contacts.getRemarkName() != null && contacts.getRemarkName().length() > 1)
+            {
+                title = contacts.getRemarkName();
+            }
+
             ContactsItem item = new ContactsItem(contacts.getUsername(),
-                    contacts.getUsername(), "d");
+                    title, "d");
 
             contactsItemList.add(item);
         }
@@ -114,7 +120,7 @@ public class ContactsPanel extends ParentAvailablePanel
         contactsListView.notifyDataSetChanged(false);
 
         // 通讯录更新后，获取头像
-        getContactsUserAvatar();
+        //getContactsUserAvatar();
     }
 
     public static ContactsPanel getContext()

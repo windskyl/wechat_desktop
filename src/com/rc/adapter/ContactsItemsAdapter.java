@@ -85,10 +85,10 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         viewHolders.add(position, viewHolder);
         ContactsItem item = contactsItems.get(position);
 
-        ImageIcon icon = new ImageIcon();
+       /* ImageIcon icon = new ImageIcon();
         icon.setImage(AvatarUtil.createOrLoadUserAvatar(item.getName())
                 .getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-        viewHolder.avatar.setIcon(icon);
+        viewHolder.avatar.setIcon(icon);*/
 
         viewHolder.roomName.setText(item.getName());
 
