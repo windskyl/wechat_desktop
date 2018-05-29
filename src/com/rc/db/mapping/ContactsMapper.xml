@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="gbk" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.rc.db.dao.ContactsUserDao">
+    <insert id="insert">
+		INSERT INTO contacts
+		(
+		    username,
+            sex,
+            attrStatus,
+            contactFlag,
+            memberList,
+            headImgUrl,
+            memberCount,
+            city,
+            nickName,
+            province,
+            snsFlag,
+            signature,
+            remarkName,
+            pYQuanPin,
+            pYInitial,
+            remarkPYQuanPin,
+            remarkPYInitial,
+            type
+		)
+		VALUES
+		(
+		    #{username},
+            #{sex},
+            #{attrStatus},
+            #{contactFlag},
+            #{memberList},
+            #{headImgUrl},
+            #{memberCount},
+            #{city},
+            #{nickName},
+            #{province},
+            #{snsFlag},
+            #{signature},
+            #{remarkName},
+            #{pYQuanPin},
+            #{pYInitial},
+            #{remarkPYQuanPin},
+            #{remarkPYInitial},
+            #{type}
+		)
+	</insert>
+
+
+    <select id="findById" resultType="ContactsUser">
+		SELECT * FROM contacts where username = #{username}
+	</select>
+
+    <select id="findAll" resultType="ContactsUser">
+		SELECT * FROM contacts
+	</select>
+
+    <select id="find" resultType="ContactsUser" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM contacts where ${field} = ${val}
+    </select>
+
+
+    <select id="searchByUsernameOrName" resultType="ContactsUser" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM contacts where username like ${usernameCondition} or name like ${nameCondition}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+		SELECT count(1) FROM contacts
+	</select>
+
+    <select id="exist" resultType="java.lang.Integer">
+		SELECT count(1) FROM contacts where username = #{username}
+	</select>
+
+    <delete id="deleteAll">
+		delete from contacts
+	</delete>
+
+    <delete id="deleteByUsername">
+        delete from contacts where username = #{username}
+    </delete>
+
+
+    <update id="update">
+        UPDATE contacts
+        <set>
+            username = #{username},
+            sex = #{sex},
+            attrStatus = #{attrStatus},
+            contactFlag = #{contactFlag},
+            memberList = #{memberList},
+            headImgUrl = #{headImgUrl},
+            memberCount = #{memberCount},
+            city = #{city},
+            nickName = #{nickName},
+            province = #{province},
+            snsFlag = #{snsFlag},
+            signature = #{signature},
+            remarkName = #{remarkName},
+            pYQuanPin = #{pYQuanPin},
+            pYInitial = #{pYInitial},
+            remarkPYQuanPin = #{remarkPYQuanPin},
+            remarkPYInitial = #{remarkPYInitial},
+            typ = #{type}
+        </set>
+        WHERE userId=#{userId}
+    </update>
+
+    <update id="updateIgnoreNull">
+        UPDATE contacts
+        <set>
+            <if test="username != null">username=#{username}</if>
+            <if test="sex != null">sex=#{sex}</if>
+            <if test="attrStatus != null">attrStatus=#{attrStatus}</if>
+            <if test="contactFlag != null">contactFlag=#{contactFlag}</if>
+            <if test="memberList != null">memberList=#{memberList}</if>
+            <if test="headImgUrl != null">headImgUrl=#{headImgUrl}</if>
+            <if test="memberCount != null">memberCount=#{memberCount}</if>
+            <if test="city != null">city=#{city}</if>
+            <if test="nickName != null">nickName=#{nickName}</if>
+            <if test="province != null">province=#{province}</if>
+            <if test="snsFlag != null">snsFlag=#{snsFlag}</if>
+            <if test="signature != null">signature=#{signature}</if>
+            <if test="remarkName != null">remarkName=#{remarkName}</if>
+            <if test="pYQuanPin != null">pYQuanPin=#{pYQuanPin}</if>
+            <if test="pYInitial != null">pYInitial=#{pYInitial}</if>
+            <if test="remarkPYQuanPin != null">remarkPYQuanPin=#{remarkPYQuanPin}</if>
+            <if test="remarkPYInitial != null">remarkPYInitial=#{remarkPYInitial}</if>
+            <if test="type != null">type=#{type}</if>
+        </set>
+        WHERE username=#{username}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

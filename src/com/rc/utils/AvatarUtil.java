@@ -645,26 +645,15 @@ public class AvatarUtil
             {
                 // 从服务器加载头像
                 HttpBytesGetTask task = new HttpBytesGetTask();
-                String cookie = "mm_lang=" + user.getMmLang() + "; " +
-                        "refreshTimes=3; " +
-                        "wxuin=" + user.getUin() + "; " +
-                        "wxloadtime=" + user.getWxLoadTime() + "; " +
-                        "webwxuvid=" + user.getWebwxuvid() + "; " +
-                        "webwx_auth_ticket=" + user.getWebwxAuthTicket() + "; " +
-                        "MM_WX_NOTIFY_STATE=1; " +
-                        "MM_WX_SOUND_STATE=1; " +
-                        "login_frequency=4; " +
-                        "last_wxuin=" + user.getUin() + "; " +
-                        "wxsid=" + user.getSid() + "; " +
-                        "webwx_data_ticket=" + user.getWebwxDataTicket();
 
-                task.addHeader("Cookie", cookie);
+
+                task.addHeader("Cookie", Launcher.Cookie);
                 task.setListener(new HttpResponseListener<byte[]>()
                 {
                     @Override
                     public void onSuccess(byte[] data, Headers headers)
                     {
-                        System.out.println("成功获取 " + headImageUrl);
+                        //System.out.println("成功获取 " + headImageUrl);
 
                         if (data != null && data.length > 0)
                         {
@@ -686,7 +675,7 @@ public class AvatarUtil
                 String url = "https://wx.qq.com" + headImageUrl;
                 task.execute(url);
 
-                System.out.println("请求头像: "+ url +", Cookie= " + cookie);
+                //System.out.println("请求头像: "+ url +", Cookie= " + cookie);
 
             }
         }

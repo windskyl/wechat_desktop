@@ -65,10 +65,10 @@ public class DbUtils
 				System.out.println("创建表 image_attachment");
 				tableService.createImageAttachmentTable();
 			}
-			if (!tableService.exist("contacts_user"))
+			if (!tableService.exist("contacts"))
 			{
-				System.out.println("创建表 contacts_user");
-				tableService.createContactsUserTable();
+				System.out.println("创建表 contacts");
+				tableService.createContactsTable();
 			}
 		}
 	}

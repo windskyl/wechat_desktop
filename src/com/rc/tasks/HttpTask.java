@@ -28,14 +28,17 @@ public abstract  class HttpTask
     protected Map<String, String> requestParams = new HashMap<>();
     protected String url;
 
-    public void addHeader(String name, String value)
+    public HttpTask addHeader(String name, String value)
     {
         headers.put(name, value);
+
+        return this;
     }
 
-    public void addRequestParam(String name, String value)
+    public HttpTask addRequestParam(String name, String value)
     {
         requestParams.put(name, value);
+        return this;
     }
 
     public abstract void execute(String url);

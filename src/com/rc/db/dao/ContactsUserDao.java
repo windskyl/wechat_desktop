@@ -1,6 +1,6 @@
 package com.rc.db.dao;
 
-import com.rc.db.model.ContactsUser;
+import com.rc.db.model.Contacts;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class ContactsUserDao extends BasicDao
         return session.delete("deleteByUsername", username);
     }
 
-    public List<ContactsUser> searchByUsernameOrName(String username, String name)
+    public List<Contacts> searchByUsernameOrName(String username, String name)
     {
         Map map = new HashMap();
         map.put("usernameCondition", "'%" + username + "%'");

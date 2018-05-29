@@ -6,9 +6,9 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCButton;
 import com.rc.components.VerticalFlowLayout;
-import com.rc.db.model.ContactsUser;
+import com.rc.db.model.Contacts;
 import com.rc.db.model.Room;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.ContactsService;
 import com.rc.db.service.RoomService;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
@@ -60,7 +60,7 @@ public class UserInfoPanel extends ParentAvailablePanel
 
     private String username;
     private RoomService roomService = Launcher.roomService;
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
 
     public UserInfoPanel(JPanel parent)
     {
@@ -132,8 +132,8 @@ public class UserInfoPanel extends ParentAvailablePanel
 
     private void openOrCreateDirectChat()
     {
-        ContactsUser user  = contactsUserService.find("username", username).get(0);
-        String userId = user.getUserId();
+        Contacts user  = contactsService.find("username", username).get(0);
+        String userId = user.getUsername();
         Room room = roomService.findRelativeRoomIdByUserId(userId);
 
         // 房间已存在，直接打开，否则发送请求创建房间
@@ -142,7 +142,7 @@ public class UserInfoPanel extends ParentAvailablePanel
             ChatPanel.getContext().enterRoom(room.getUsername());
         }else
         {
-            createDirectChat(user.getName());
+            createDirectChat(user.getUsername());
         }
     }
 

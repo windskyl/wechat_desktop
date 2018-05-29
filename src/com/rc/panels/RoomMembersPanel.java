@@ -3,10 +3,10 @@ package com.rc.panels;
 import com.rc.adapter.RoomMembersAdapter;
 import com.rc.app.Launcher;
 import com.rc.components.*;
-import com.rc.db.model.ContactsUser;
+import com.rc.db.model.Contacts;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.model.Room;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.ContactsService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.RoomService;
 import com.rc.entity.SelectUserData;
@@ -14,7 +14,6 @@ import com.rc.frames.AddOrRemoveMemberDialog;
 import com.rc.frames.MainFrame;
 import com.rc.tasks.HttpPostTask;
 import com.rc.tasks.HttpResponseListener;
-import com.rc.utils.AvatarUtil;
 import okhttp3.Headers;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,7 +74,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private CurrentUser currentUser;
     private Room room;
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
     private RoomMembersAdapter adapter;
     private AddOrRemoveMemberDialog addOrRemoveMemberDialog;
 
@@ -325,14 +324,14 @@ public class RoomMembersPanel extends ParentAvailablePanel
      */
     private void selectAndAddRoomMember()
     {
-        List<ContactsUser> contactsUsers = contactsUserService.findAll();
+        List<Contacts> contactsList = contactsService.findAll();
         List<SelectUserData> selectUsers = new ArrayList<>();
 
-        for (ContactsUser contactsUser : contactsUsers)
+        for (Contacts contacts : contactsList)
         {
-            if (!members.contains(contactsUser.getUsername()))
+            if (!members.contains(contacts.getUsername()))
             {
-                selectUsers.add(new SelectUserData(contactsUser.getUsername(), false));
+                selectUsers.add(new SelectUserData(contacts.getUsername(), false));
             }
         }
         addOrRemoveMemberDialog = new AddOrRemoveMemberDialog(MainFrame.getContext(), true, selectUsers);
@@ -429,7 +428,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         {
             String t = getRoomType();
             String url = Launcher.HOSTNAME + "/api/v1/" + t + "." + type;
-            String userId = contactsUserService.findByUsername(username).getUserId();
+            String userId = contactsService.findByUsername(username).getUsername();
 
             HttpPostTask task = new HttpPostTask();
             //task.addHeader("X-Auth-Token", currentUser.getAuthToken());

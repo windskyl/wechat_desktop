@@ -12,6 +12,8 @@ import com.rc.tasks.HttpBytesGetTask;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpPostTask;
 import com.rc.utils.*;
+import com.rc.web.DataPullHelper;
+import com.rc.web.Urls;
 import okhttp3.Headers;
 import org.apache.ibatis.session.SqlSession;
 import com.rc.tasks.HttpResponseListener;
@@ -482,7 +484,6 @@ public class LoginFrame extends JFrame
             @Override
             public void onSuccess(JSONObject body, Headers headers)
             {
-                System.out.println(body);
                 saveCurrentUser(skey, wxsid, wxuin, pass_ticket, wxloadtime, mm_lang, webwx_data_ticket, webwxuvid,
                         webwx_auth_ticket, body);
                 dispose();
@@ -494,6 +495,10 @@ public class LoginFrame extends JFrame
 
                 // 解析初始的房间列表
                 initRoomsData(body.getJSONArray("ContactList"));
+
+                // 拉取其他数据
+                DataPullHelper dataPullHelper = new DataPullHelper();
+                dataPullHelper.pullContacts();
             }
 
             @Override
@@ -539,6 +544,21 @@ public class LoginFrame extends JFrame
         currentUserService.insert(user);
 
         Launcher.currentUser = user;
+
+        String cookie = "mm_lang=" + user.getMmLang() + "; " +
+                "refreshTimes=3; " +
+                "wxuin=" + user.getUin() + "; " +
+                "wxloadtime=" + user.getWxLoadTime() + "; " +
+                "webwxuvid=" + user.getWebwxuvid() + "; " +
+                "webwx_auth_ticket=" + user.getWebwxAuthTicket() + "; " +
+                "MM_WX_NOTIFY_STATE=1; " +
+                "MM_WX_SOUND_STATE=1; " +
+                "login_frequency=4; " +
+                "last_wxuin=" + user.getUin() + "; " +
+                "wxsid=" + user.getSid() + "; " +
+                "webwx_data_ticket=" + user.getWebwxDataTicket();
+
+        Launcher.Cookie = cookie;
     }
 
     /**

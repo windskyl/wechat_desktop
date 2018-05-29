@@ -44,8 +44,8 @@ public class TableDao
         session.update("createImageAttachmentTable");
     }
 
-    public void createContactsUserTable()
+    public void createContactsTable()
     {
-        session.update("createContactsUserTable");
+        session.update("createContactsTable");
     }
 }

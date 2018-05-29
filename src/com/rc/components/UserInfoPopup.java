@@ -1,12 +1,8 @@
 package com.rc.components;
 
 
-import com.rc.components.Colors;
-import com.rc.components.GBC;
-import com.rc.components.RCButton;
-import com.rc.db.model.ContactsUser;
+import com.rc.db.model.Contacts;
 import com.rc.db.model.Room;
-import com.rc.forms.ImageLabel;
 import com.rc.forms.ImageViewerFrame;
 import com.rc.panels.ChatPanel;
 import com.rc.panels.ContactsPanel;
@@ -19,7 +15,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static com.rc.app.Launcher.contactsUserService;
+import static com.rc.app.Launcher.contactsService;
 import static com.rc.app.Launcher.roomService;
 
 /**
@@ -130,8 +126,8 @@ public class UserInfoPopup extends JPopupMenu
 
     private void openOrCreateDirectChat()
     {
-        ContactsUser user  = contactsUserService.find("username", username).get(0);
-        String userId = user.getUserId();
+        Contacts user  = contactsService.find("username", username).get(0);
+        String userId = user.getUsername();
         Room room = roomService.findRelativeRoomIdByUserId(userId);
 
         // 房间已存在，直接打开，否则发送请求创建房间
@@ -140,7 +136,7 @@ public class UserInfoPopup extends JPopupMenu
             ChatPanel.getContext().enterRoom(room.getUsername());
         }else
         {
-            createDirectChat(user.getName());
+            createDirectChat(user.getUsername());
         }
 
         this.setVisible(false);

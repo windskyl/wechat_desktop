@@ -1,4 +1,4 @@
-package com.rc.components;
+package com.rc.web;
 
 public class Urls
 {
@@ -14,6 +14,18 @@ public class Urls
     /** 初始化 **/
     public static final String WX_INIT = "https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit";
 
+    /** 通讯录 **/
+    public static final String CONTACTS = "https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxgetcontact?pass_ticket={0}&r=${1}&seq=0&skey=${2}";
 
 
+    public static String fill(String src, Object... params)
+    {
+        String ret = "";
+        for (int i = 0; i < params.length; i++)
+        {
+            ret = src.replaceAll("\\{" + i + "\\}", params[i].toString());
+        }
+
+        return ret;
+    }
 }

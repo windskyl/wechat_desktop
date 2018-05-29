@@ -5,8 +5,8 @@ import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCListView;
-import com.rc.db.model.ContactsUser;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.model.Contacts;
+import com.rc.db.service.ContactsService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.entity.ContactsItem;
 import com.rc.utils.AvatarUtil;
@@ -58,7 +58,7 @@ public class ContactsPanel extends ParentAvailablePanel
 
     private RCListView contactsListView;
     private List<ContactsItem> contactsItemList = new ArrayList<>();
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
     private Logger logger = Logger.getLogger(this.getClass());
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private String currentUsername;
@@ -91,16 +91,16 @@ public class ContactsPanel extends ParentAvailablePanel
     {
         contactsItemList.clear();
 
-        List<ContactsUser> contactsUsers = contactsUserService.findAll();
-        for (ContactsUser contactsUser : contactsUsers)
+        List<Contacts> contactsList = contactsService.findAll();
+        for (Contacts contacts : contactsList)
         {
-            if (contactsUser.getUsername().equals("admin") || contactsUser.getUsername().equals("appStoreTest"))
+            if (contacts.getUsername().equals("admin") || contacts.getUsername().equals("appStoreTest"))
             {
                 continue;
             }
 
-            ContactsItem item = new ContactsItem(contactsUser.getUserId(),
-                    contactsUser.getUsername(), "d");
+            ContactsItem item = new ContactsItem(contacts.getUsername(),
+                    contacts.getUsername(), "d");
 
             contactsItemList.add(item);
         }

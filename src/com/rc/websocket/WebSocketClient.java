@@ -3,7 +3,7 @@ package com.rc.websocket;
 import com.neovisionaries.ws.client.*;
 import com.rc.app.Launcher;
 import com.rc.db.model.*;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.ContactsService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
@@ -52,7 +52,7 @@ public class WebSocketClient
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private RoomService roomService = Launcher.roomService;
     private MessageService messageService = Launcher.messageService;
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
 
     private CurrentUser currentUser;
     private String currentUserId;
@@ -358,7 +358,7 @@ public class WebSocketClient
         {
             processLogoutMessage();
             /*currentUserService.delete(Realm.getDefaultInstance());
-            contactsUserService.deleteAll(Realm.getDefaultInstance(), ContactsUser.class);
+            contactsService.deleteAll(Realm.getDefaultInstance(), Contacts.class);
             roomService.deleteAll(Realm.getDefaultInstance(), Room.class);
 
             sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN);*/
@@ -384,7 +384,7 @@ public class WebSocketClient
     private void processLogoutMessage()
     {
         currentUserService.deleteAll();
-        contactsUserService.deleteAll();
+        contactsService.deleteAll();
         roomService.deleteAll();
 
         LAST_RECONNECT_TIME = 0;
@@ -1009,8 +1009,8 @@ public class WebSocketClient
                     JSONArray userArray = retJson.getJSONArray("users");
                     if (userArray != null)
                     {
-                        //contactsUserService.deleteAll(Realm.getDefaultInstance(), ContactsUser.class);
-                        contactsUserService.deleteAll();
+                        //contactsService.deleteAll(Realm.getDefaultInstance(), Contacts.class);
+                        contactsService.deleteAll();
                         for (int i = 0; i < userArray.length(); i++)
                         {
                             JSONObject user = userArray.getJSONObject(i);
@@ -1021,9 +1021,9 @@ public class WebSocketClient
                                 continue;
                             }
 
-                            ContactsUser contactsUser = new ContactsUser(user.getString("_id"), user.getString("username"), user.getString("name"));
-                            //contactsUserService.insertOrUpdate(Realm.getDefaultInstance(), contactsUser);
-                            contactsUserService.insert(contactsUser);
+                            //Contacts contacts = new Contacts(user.getString("_id"), user.getString("username"), user.getString("name"));
+                            //contactsService.insertOrUpdate(Realm.getDefaultInstance(), contacts);
+                            //contactsService.insert(contacts);
                         }
                     }
 

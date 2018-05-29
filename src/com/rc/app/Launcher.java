@@ -4,7 +4,6 @@ import com.rc.db.model.CurrentUser;
 import com.rc.db.service.*;
 import com.rc.frames.LoginFrame;
 import com.rc.frames.MainFrame;
-import com.rc.tasks.HttpBytesGetTask;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.DbUtils;
@@ -33,7 +32,7 @@ public class Launcher
     public static RoomService roomService;
     public static CurrentUserService currentUserService;
     public static MessageService messageService;
-    public static ContactsUserService contactsUserService;
+    public static ContactsService contactsService;
     public static ImageAttachmentService imageAttachmentService;
     public static FileAttachmentService fileAttachmentService;
 
@@ -42,6 +41,7 @@ public class Launcher
     public static final String APP_VERSION = "1.0.15";
 
     public static CurrentUser currentUser;
+    public static String Cookie;
 
 
     public static String userHome;
@@ -62,7 +62,7 @@ public class Launcher
         roomService = new RoomService(sqlSession);
         currentUserService = new CurrentUserService(sqlSession);
         messageService = new MessageService(sqlSession);
-        contactsUserService = new ContactsUserService(sqlSession);
+        contactsService = new ContactsService(sqlSession);
         imageAttachmentService = new ImageAttachmentService(sqlSession);
         fileAttachmentService = new FileAttachmentService(sqlSession);
 

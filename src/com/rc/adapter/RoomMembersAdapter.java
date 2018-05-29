@@ -3,7 +3,7 @@ package com.rc.adapter;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.db.model.CurrentUser;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.ContactsService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.components.UserInfoPopup;
 import com.rc.listener.AbstractMouseListener;
@@ -25,7 +25,7 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
     private List<RoomMembersItemViewHolder> viewHolders = new ArrayList<>();
     private CurrentUser currentUser;
     private CurrentUserService currentUserService = Launcher.currentUserService;
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
     private MouseAdapter addMemberButtonMouseListener;
     private MouseAdapter removeMemberButtonMouseListener;
 

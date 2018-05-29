@@ -1,16 +1,13 @@
 package com.rc.frames;
 
 import com.rc.app.Launcher;
-import com.rc.app.ShadowBorder;
 import com.rc.components.*;
-import com.rc.db.model.ContactsUser;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.model.Contacts;
+import com.rc.db.service.ContactsService;
 import com.rc.entity.SelectUserData;
 import com.rc.panels.SelectUserPanel;
 import com.rc.utils.FontUtil;
-import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
-import com.sun.awt.AWTUtilities;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -38,7 +35,7 @@ public class CreateGroupDialog extends JDialog
     private JButton okButton;
     private List<SelectUserData> userList = new ArrayList<>();
 
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
 
 
     public static final int DIALOG_WIDTH = 580;
@@ -59,8 +56,8 @@ public class CreateGroupDialog extends JDialog
 
     private void initData()
     {
-        List<ContactsUser> contactsUsers = contactsUserService.findAll();
-        for (ContactsUser con : contactsUsers)
+        List<Contacts> contacts = contactsService.findAll();
+        for (Contacts con : contacts)
         {
             /*if (con.getUsername().equals("admin") || con.getUsername().equals("appStoreTest"))
             {

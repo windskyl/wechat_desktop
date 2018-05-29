@@ -4,18 +4,46 @@
 	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.rc.db.dao.TableDao">
 	<update id="createCurrentUserTable">
-		create table current_user(userId VARCHAR(20) PRIMARY KEY, username VARCHAR(20),
-		authToken VARCHAR(64),password VARCHAR(20),rawPassword VARCHAR(64),
-		expireDate VARCHAR(20),realName VARCHAR(20),bcrypt VARCHAR(64),
-		avatarOrigin VARCHAR(1024));
+		CREATE TABLE current_user (
+		username        VARCHAR( 100 )   PRIMARY KEY,
+		skey            VARCHAR( 32 ),
+		sid             VARCHAR( 32 ),
+		uin             VARCHAR( 32 ),
+		passTicket      VARCHAR( 100 ),
+		sex             INT,
+		nickName        VARCHAR( 100 ),
+		signature       VARCHAR( 512 ),
+		remarkName      VARCHAR( 32 ),
+		headImgUrl      VARCHAR( 1024 ),
+		wxLoadTime      VARCHAR( 32 ),
+		mmLang          VARCHAR( 32 ),
+		webwxDataTicket VARCHAR( 512 ),
+		webwxuvid       VARCHAR( 512 ),
+		webwxAuthTicket VARCHAR( 512 )
+		)
 	</update>
 
 	<update id="createRoomTable">
-		create table room(roomId VARCHAR(20) PRIMARY KEY, type VARCHAR(10),
-		name VARCHAR(64),topic VARCHAR(64),muted VARCHAR(20),
-		member VARCHAR(10240),sysMes BOOLEAN ,msgSum INTEGER,
-		lastChatAt INTEGER, creatorName VARCHAR(64), creatorId VARCHAR(20), jitsiTimeout VARCHAR(20), readOnly BOOLEAN,
-		archived BOOLEAN, defaultRoom BOOLEAN, createdAt VARCHAR(20), updatedAt VARCHAR(20), unreadCount INTEGER, totalReadCount INTEGER, lastMessage VARCHAR(1024));
+		CREATE TABLE room (
+		username       VARCHAR( 100 )   PRIMARY KEY,
+		type           VARCHAR( 10 ),
+		nickname       VARCHAR( 100 ),
+		memberCount    INT,
+		msgSum         INTEGER,
+		lastChatAt     INTEGER,
+		unreadCount    INTEGER,
+		totalReadCount INTEGER,
+		lastMessage    VARCHAR( 1024 ),
+		headImgUrl     VARCHAR( 1024 ),
+		signature      VARCHAR( 1024 ),
+		remarkName     VARCHAR( 100 ),
+		city           VARCHAR( 64 ),
+		province       VARCHAR( 64 ),
+		sex            INT,
+		attrStatus     INT,
+		contactFlag    INT,
+		snsFlag        INT
+		)
 	</update>
 
 	<update id="createMessageTable">
@@ -56,11 +84,27 @@
 	</update>
 
 
-	<update id="createContactsUserTable">
-		create table contacts_user(
-		userId VARCHAR(20) PRIMARY KEY,
-		username VARCHAR(64),
-		name VARCHAR(64))
+	<update id="createContactsTable">
+		CREATE TABLE contacts (
+		username        VARCHAR( 100 )   PRIMARY KEY,
+		sex             INT,
+		attrStatus      INT,
+		contactFlag     INT,
+		memberList      VARCHAR( 4000 ),
+		headImgUrl      VARCHAR( 1024 ),
+		memberCount     INT,
+		city            VARCHAR( 64 ),
+		nickName        VARCHAR( 100 ),
+		province        VARCHAR( 64 ),
+		snsFlag         INT,
+		signature       VARCHAR( 512 ),
+		remarkName      VARCHAR( 100 ),
+		pYQuanPin       VARCHAR( 512 ),
+		pYInitial       VARCHAR( 512 ),
+		remarkPYQuanPin VARCHAR( 512 ),
+		remarkPYInitial VARCHAR( 512 ),
+		type            VARCHAR( 64 )
+	)
 	</update>
 
 	<select id="tableExist" resultType="java.lang.Integer">

@@ -5,11 +5,11 @@ import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCSearchTextField;
-import com.rc.db.model.ContactsUser;
+import com.rc.db.model.Contacts;
 import com.rc.db.model.FileAttachment;
 import com.rc.db.model.Message;
 import com.rc.db.model.Room;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.ContactsService;
 import com.rc.db.service.FileAttachmentService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
@@ -64,7 +64,7 @@ public class SearchPanel extends ParentAvailablePanel
     private RoomService roomService = Launcher.roomService;
     private boolean setSearchMessageOrFileListener = false;
 
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
     private MessageService messageService = Launcher.messageService;
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
 
@@ -339,12 +339,12 @@ public class SearchPanel extends ParentAvailablePanel
      */
     private List<SearchResultItem> searchContacts(String key)
     {
-        List<ContactsUser> contactsUsers = contactsUserService.searchByUsernameOrName(key, key);
+        List<Contacts> contacts = contactsService.searchByUsernameOrName(key, key);
         List<SearchResultItem> retList = new ArrayList<>();
         SearchResultItem item;
-        for (ContactsUser user : contactsUsers)
+        for (Contacts user : contacts)
         {
-            item = new SearchResultItem(user.getUserId(), user.getUsername(), "d");
+            item = new SearchResultItem(user.getUsername(), user.getUsername(), "d");
             retList.add(item);
         }
         return retList;

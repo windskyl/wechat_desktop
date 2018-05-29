@@ -1,32 +1,30 @@
 package com.rc.db.service;
 
 import com.rc.db.dao.ContactsUserDao;
-import com.rc.db.model.ContactsUser;
-import com.rc.db.model.CurrentUser;
+import com.rc.db.model.Contacts;
 import org.apache.ibatis.session.SqlSession;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 
 import java.util.List;
 
 /**
  * Created by song on 08/06/2017.
  */
-public class ContactsUserService extends BasicService<ContactsUserDao, ContactsUser>
+public class ContactsService extends BasicService<ContactsUserDao, Contacts>
 {
-    public ContactsUserService(SqlSession session)
+    public ContactsService(SqlSession session)
     {
         dao = new ContactsUserDao(session);
         super.setDao(dao);
     }
 
-    public int insertOrUpdate(ContactsUser contactsUser)
+    public int insertOrUpdate(Contacts contacts)
     {
-        if (exist(contactsUser.getUserId()))
+        if (exist(contacts.getUsername()))
         {
-            return update(contactsUser);
+            return update(contacts);
         }else
         {
-            return insert(contactsUser);
+            return insert(contacts);
         }
     }
 
@@ -35,19 +33,26 @@ public class ContactsUserService extends BasicService<ContactsUserDao, ContactsU
         return dao.deleteByUsername(name);
     }
 
-    public ContactsUser findByUsername(String username)
+    public Contacts findByUsername(String username)
     {
         List list = dao.find("username", username);
         if (list != null && list.size() > 0)
         {
-            return (ContactsUser) list.get(0);
+            return (Contacts) list.get(0);
         }
 
         return null;
     }
 
-    public List<ContactsUser> searchByUsernameOrName(String username, String name)
+    public List<Contacts> searchByUsernameOrName(String username, String name)
     {
         return dao.searchByUsernameOrName(username, name);
     }
 }
+
+
+
+
+
+
+

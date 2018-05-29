@@ -3,11 +3,10 @@ package com.rc.websocket.handler;
 
 import com.rc.app.Launcher;
 import com.rc.db.model.Room;
-import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.ContactsService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
-import com.rc.panels.ChatPanel;
 import com.rc.frames.CreateGroupDialog;
 import com.rc.panels.RoomsPanel;
 import com.rc.websocket.SubscriptionHelper;
@@ -32,7 +31,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
     private SubscriptionHelper subscriptionHelper;
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private MessageService messageService = Launcher.messageService;
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private ContactsService contactsService = Launcher.contactsService;
 
     private Logger logger;
 
@@ -193,8 +192,8 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
             if (obj.getString("t").equals("d"))
             {
                 String name = obj.getString("name");
-                //contactsUserService.deleteByUsername(Realm.getDefaultInstance(), name);
-                contactsUserService.deleteByUsername(name);
+                //contactsService.deleteByUsername(Realm.getDefaultInstance(), name);
+                contactsService.deleteByUsername(name);
                 //this.webSocketService.sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, WebSocketService.EVENT_UPDATE_CONTACTS);
                 // 更新通讯录:
                 //ContactsPanel.getContext().notifyDataSetChanged();

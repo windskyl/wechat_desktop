@@ -45,8 +45,8 @@ public class TableService
         dao.createImageAttachmentTable();
     }
 
-    public void createContactsUserTable()
+    public void createContactsTable()
     {
-        dao.createContactsUserTable();
+        dao.createContactsTable();
     }
 }
