@@ -30,7 +30,7 @@ public class DataPullHelper
      */
     public void pullContacts()
     {
-
+        contactsService.deleteAll();
         String url = Urls.fill(Urls.CONTACTS, Launcher.currentUser.getPassTicket(),
                 System.currentTimeMillis(), Launcher.currentUser.getSkey());
 
@@ -40,8 +40,6 @@ public class DataPullHelper
             public void onSuccess(JSONObject body, Headers headers)
             {
                 logger.info("成功获取通讯录信息");
-                //System.out.println(body);
-
                 int ret = body.getJSONObject("BaseResponse").getInt("Ret");
                 if (ret != 0)
                 {

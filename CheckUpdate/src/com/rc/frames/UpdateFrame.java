@@ -151,7 +151,7 @@ public class UpdateFrame extends JFrame
                             break;
                     }
 
-                    messageLabel.setText("和理通 正在更新中" + dot);
+                    messageLabel.setText("微信 正在更新中" + dot);
 
                     try
                     {
@@ -179,7 +179,7 @@ public class UpdateFrame extends JFrame
         logoLabel.setIcon(icon);
         setIconImage(icon.getImage());
 
-        messageLabel = new JLabel("和理通 正在更新中...");
+        messageLabel = new JLabel("微信 正在更新中...");
         messageLabel.setFont(FontUtil.getDefaultFont(32));
         messageLabel.setForeground(Colors.FONT_GRAY);
 

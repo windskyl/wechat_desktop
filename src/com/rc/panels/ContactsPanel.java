@@ -18,6 +18,7 @@ import com.rc.tasks.HttpResponseListener;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -94,23 +95,22 @@ public class ContactsPanel extends ParentAvailablePanel
         List<Contacts> contactsList = contactsService.findAll();
         for (Contacts contacts : contactsList)
         {
-            if (contacts.getUsername().equals("admin") || contacts.getUsername().equals("appStoreTest"))
-            {
-                continue;
-            }
-
             String title = contacts.getNickName();
             if (contacts.getRemarkName() != null && contacts.getRemarkName().length() > 1)
             {
                 title = contacts.getRemarkName();
             }
-
-            ContactsItem item = new ContactsItem(contacts.getUsername(),
-                    title, "d");
+            ContactsItem item = new ContactsItem();
+            item.setTitle(title);
+            item.setpYQuanPin(contacts.getpYQuanPin());
+            item.setHeadImageUrl(contacts.getHeadImgUrl());
+            item.setType(contacts.getType());
+            item.setUsername(contacts.getUsername());
 
             contactsItemList.add(item);
         }
 
+        //Collections.sort(contactsItemList);
     }
 
     public void notifyDataSetChanged()
@@ -140,9 +140,9 @@ public class ContactsPanel extends ParentAvailablePanel
             {
                 for (ContactsItem user : contactsItemList)
                 {
-                    if (!AvatarUtil.customAvatarExist(user.getName()))
+                    if (!AvatarUtil.customAvatarExist(user.getTitle()))
                     {
-                        final String username = user.getName();
+                        final String username = user.getTitle();
                         //logger.debug("获取头像:" + username);
                         getUserAvatar(username, true);
                     }

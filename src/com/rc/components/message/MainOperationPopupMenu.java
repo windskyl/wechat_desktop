@@ -64,7 +64,7 @@ public class MainOperationPopupMenu extends JPopupMenu
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "确认退出和理通？", "确认退出", JOptionPane.YES_NO_OPTION);
+                int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "确认退出微信？", "确认退出", JOptionPane.YES_NO_OPTION);
                 if (ret == JOptionPane.YES_OPTION)
                 {
                     MainFrame.getContext().exitApp();

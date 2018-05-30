@@ -116,6 +116,7 @@ public class LoginFrame extends JFrame
         tipLabel.setForeground(Colors.FONT_GRAY_DARKER);
 
         setIconImage(IconUtil.getIcon(this, "/image/ic_launcher.png").getImage());
+        this.setTitle("微信");
     }
 
     private void initView()
@@ -419,7 +420,6 @@ public class LoginFrame extends JFrame
                     List<String> list = entry.getValue();
                     if (name.equals("set-cookie"))
                     {
-                        System.out.println(name + ": " + list);
                         for (String head : list)
                         {
                             // head: wxuin=1023459521; Domain=wx.qq.com; Path=/; Expires=Sun, 27-May-2018 02:50:59 GMT

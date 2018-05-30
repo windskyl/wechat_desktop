@@ -1,10 +1,12 @@
 package com.rc.adapter;
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.RCBorder;
 import com.rc.entity.ContactsItem;
 import com.rc.panels.RightPanel;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarLoadedListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.CharacterParser;
 
@@ -84,20 +86,35 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
     {
         viewHolders.add(position, viewHolder);
         ContactsItem item = contactsItems.get(position);
+        viewHolder.roomName.setText(item.getTitle());
 
-       /* ImageIcon icon = new ImageIcon();
-        icon.setImage(AvatarUtil.createOrLoadUserAvatar(item.getName())
-                .getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-        viewHolder.avatar.setIcon(icon);*/
+        // 获取头像
+        AvatarUtil.getOrLoadUserAvatarAsync(item.getUsername(), item.getHeadImageUrl(), Launcher.currentUser,
+                new AvatarLoadedListener()
+                {
+                    @Override
+                    public void onSuccess(Image image)
+                    {
+                        ImageIcon icon = new ImageIcon();
+                        icon.setImage(image.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+                        viewHolder.avatar.setIcon(icon);
+                    }
 
-        viewHolder.roomName.setText(item.getName());
+                    @Override
+                    public void onFailed()
+                    {
+                        ImageIcon icon = new ImageIcon();
+                        icon.setImage(AvatarUtil.getDefaultAvatar().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+                        viewHolder.avatar.setIcon(icon);
+                    }
+                });
 
         viewHolder.addMouseListener(new AbstractMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                RightPanel.getContext().getUserInfoPanel().setUsername(item.getName());
+                RightPanel.getContext().getUserInfoPanel().setUsername(item.getTitle());
                 RightPanel.getContext().showPanel(RightPanel.USER_INFO);
 
                 setBackground(viewHolder, Colors.ITEM_SELECTED);
@@ -140,17 +157,41 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
     public void processData()
     {
         Collections.sort(contactsItems);
+        //Collections.reverse(contactsItems);
+        Collections.sort(contactsItems, new Comparator<ContactsItem>()
+        {
+            @Override
+            public int compare(ContactsItem o1, ContactsItem o2)
+            {
+
+                String str = o2.getpYQuanPin().substring(0, 1).toUpperCase();
+                char ch = str.charAt(0);
+                if (ch < 'A' || ch > 'Z')
+                {
+                    return 1;
+                }
+
+                return 0;
+            }
+        });
+
         positionMap.clear();
 
         int index = 0;
         String lastChara = "";
         for (ContactsItem item : contactsItems)
         {
-            String ch = CharacterParser.getSelling(item.getName()).substring(0, 1).toUpperCase();
-            if (!ch.equals(lastChara))
+            String str = item.getpYQuanPin().substring(0, 1).toUpperCase();
+            char ch = str.charAt(0);
+            if (ch < 'A' || ch > 'Z')
             {
-                lastChara = ch;
-                positionMap.put(index, ch);
+                str = "#";
+            }
+
+            if (!str.equals(lastChara))
+            {
+                lastChara = str;
+                positionMap.put(index, str);
             }
 
             index++;

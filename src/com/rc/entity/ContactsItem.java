@@ -7,39 +7,44 @@ import com.rc.utils.CharacterParser;
  */
 public class ContactsItem implements Comparable<ContactsItem>
 {
-    private String id;
-    private String name;
+    private String username;
+    private String title;
+    private String headImageUrl;
     private String type;
+    private String pYQuanPin;
 
     public ContactsItem()
     {
     }
 
-    public ContactsItem(String id, String name, String type)
+    public String getUsername()
     {
-        this.id = id;
-        this.name = name;
-        this.type = type;
+        return username;
     }
 
-    public String getId()
+    public void setUsername(String username)
     {
-        return id;
+        this.username = username;
     }
 
-    public void setId(String id)
+    public String getTitle()
     {
-        this.id = id;
+        return title;
     }
 
-    public String getName()
+    public void setTitle(String title)
     {
-        return name;
+        this.title = title;
     }
 
-    public void setName(String name)
+    public String getHeadImageUrl()
     {
-        this.name = name;
+        return headImageUrl;
+    }
+
+    public void setHeadImageUrl(String headImageUrl)
+    {
+        this.headImageUrl = headImageUrl;
     }
 
     public String getType()
@@ -53,20 +58,24 @@ public class ContactsItem implements Comparable<ContactsItem>
     }
 
     @Override
-    public String toString()
-    {
-        return "ContactsItem{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                '}';
-    }
-
-    @Override
     public int compareTo(ContactsItem o)
     {
-        String tc = CharacterParser.getSelling(this.getName()).toUpperCase();
-        String oc = CharacterParser.getSelling(o.getName()).toUpperCase();
-        return tc.compareTo(oc);
+        String str = o.getpYQuanPin().substring(0, 1).toUpperCase();
+        char ch = str.charAt(0);
+        if (ch < 'A' || ch > 'Z')
+        {
+            return 1;
+        }
+        return this.getpYQuanPin().compareTo(o.getpYQuanPin());
+    }
+
+    public String getpYQuanPin()
+    {
+        return pYQuanPin;
+    }
+
+    public void setpYQuanPin(String pYQuanPin)
+    {
+        this.pYQuanPin = pYQuanPin;
     }
 }

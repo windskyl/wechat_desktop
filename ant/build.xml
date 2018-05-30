@@ -8,8 +8,8 @@
 
     <target name="bundle-helichat">
         <bundleapp outputdirectory="../out"
-                   name="和理通"
-                   displayname="和理通"
+                   name="微信"
+                   displayname="微信"
                    identifier="com.rc.app.Helichat.App"
                    icon="src/ic_launcher.icns"
                    hidedockicon="false"

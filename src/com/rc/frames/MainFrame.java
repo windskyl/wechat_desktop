@@ -122,7 +122,7 @@ public class MainFrame extends JFrame
             if (isMacOs)
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_dark.png", 20, 20).getImage();
-                trayIcon = new TrayIcon(normalTrayIcon, "和理通");
+                trayIcon = new TrayIcon(normalTrayIcon, "微信");
                 trayIcon.setImageAutoSize(true);
 
                 trayIcon.addMouseListener(new MouseAdapter()
@@ -142,7 +142,7 @@ public class MainFrame extends JFrame
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
                 emptyTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_empty.png", 20, 20).getImage();
 
-                trayIcon = new TrayIcon(normalTrayIcon, "和理通");
+                trayIcon = new TrayIcon(normalTrayIcon, "微信");
                 trayIcon.setImageAutoSize(true);
                 PopupMenu menu = new PopupMenu();
 
@@ -176,7 +176,7 @@ public class MainFrame extends JFrame
                     }
                 });
 
-                MenuItem showItem = new MenuItem("打开和理通");
+                MenuItem showItem = new MenuItem("打开微信");
                 showItem.addActionListener(new ActionListener()
                 {
                     @Override

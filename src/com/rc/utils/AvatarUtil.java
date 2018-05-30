@@ -683,7 +683,16 @@ public class AvatarUtil
 
     public static Image getDefaultAvatar()
     {
-        BufferedImage def = readImage(AVATAR_CACHE_ROOT + File.separator + "default.png");
-        return def;
+        InputStream in = Launcher.getContext().getClass().getResourceAsStream("/image/ic_launcher.png");
+        try
+        {
+            BufferedImage img = ImageIO.read(in);
+            return img;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        //BufferedImage def = readImage(AVATAR_CACHE_ROOT + File.separator + "default.png");
+        return null;
     }
 }

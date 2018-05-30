@@ -314,7 +314,6 @@ public class RCListView extends JScrollPane
         {
             if (lastItemCount == adapter.getCount())
             {
-                System.out.println("数量相同");
                 // 保持原来内容面板的宽高，避免滚动条长度改变或可见状态改变时闪屏
                 contentPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), contentPanel.getHeight()));
             }
