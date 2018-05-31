@@ -573,19 +573,22 @@ public class LoginFrame extends JFrame
             roomService.deleteAll();
             for (Object item : contactList)
             {
+
                 Room room = new Room();
                 JSONObject obj = (JSONObject) item;
+                System.out.println(obj.getString("NickName"));
+
                 room.setSex(obj.getInt("Sex"));
                 room.setContactFlag(obj.getInt("ContactFlag"));
                 room.setUsername(obj.getString("UserName"));
                 room.setHeadImgUrl(obj.getString("HeadImgUrl"));
                 room.setMemberCount(obj.getInt("MemberCount"));
                 room.setCity(obj.getString("City"));
-                room.setNickname(EmojiUtil.replaseEmoji(obj.getString("NickName")));
+                room.setNickname(EmojiUtil.replaceEmoji(obj.getString("NickName")));
                 room.setProvince(obj.getString("Province"));
                 room.setSnsFlag(obj.getInt("SnsFlag"));
-                room.setSignature(EmojiUtil.replaseEmoji(obj.getString("Signature")));
-                room.setRemarkName(EmojiUtil.replaseEmoji(obj.getString("RemarkName")));
+                room.setSignature(EmojiUtil.replaceEmoji(obj.getString("Signature")));
+                room.setRemarkName(EmojiUtil.replaceEmoji(obj.getString("RemarkName")));
                 roomService.insertOrUpdate(room);
             }
 

@@ -13,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.util.logging.PlatformLogger;
 
 import javax.swing.*;
 
@@ -52,9 +51,6 @@ public class DataPullHelper
                 {
                     JSONObject member = (JSONObject) obj;
 
-                    System.out.println(member.getString("NickName"));
-
-
                     Contacts contacts = new Contacts();
                     contacts.setUsername(member.getString("UserName"));
                     contacts.setSex(member.getInt("Sex"));
@@ -64,11 +60,11 @@ public class DataPullHelper
                     contacts.setHeadImgUrl(member.getString("HeadImgUrl"));
                     contacts.setMemberCount(member.getInt("MemberCount"));
                     contacts.setCity(member.getString("City"));
-                    contacts.setNickName(EmojiUtil.replaseEmoji(member.getString("NickName")));
+                    contacts.setNickName(EmojiUtil.replaceEmoji(member.getString("NickName")));
                     contacts.setProvince(member.getString("Province"));
                     contacts.setSnsFlag(member.getInt("SnsFlag"));
                     contacts.setSignature(member.getString("Signature"));
-                    contacts.setRemarkName(EmojiUtil.replaseEmoji(member.getString("RemarkName")));
+                    contacts.setRemarkName(EmojiUtil.replaceEmoji(member.getString("RemarkName")));
                     contacts.setpYQuanPin(member.getString("PYQuanPin"));
                     contacts.setpYInitial(member.getString("PYInitial"));
                     contacts.setRemarkPYQuanPin(member.getString("RemarkPYQuanPin"));

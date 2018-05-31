@@ -57,9 +57,9 @@ public class EmojiUtil
         return emojis;
     }
 
-    public static String replaseEmoji(String src)
+    public static String replaceEmoji(String src)
     {
-        String regx = "<span class=\"emoji emoji([0-9a-z]{5})\">";
+        String regx = "<span class=\"emoji emoji([0-9a-z]{1,5})\">(</span>)*";
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(src);
         List<String> emojis = new ArrayList<>();
@@ -76,6 +76,6 @@ public class EmojiUtil
 
     public static void main(String[] args)
     {
-        System.out.println(replaseEmoji("琪星云儿<span class=\"emoji emoji1f493\"></span>"));
+        System.out.println(replaceEmoji("❣愛丽˃̶͈̀ε˂̶͈́豬̤̮<span class=\"emoji emoji2728\"></span>"));
     }
 }
