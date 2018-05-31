@@ -7,6 +7,7 @@ import com.rc.frames.MainFrame;
 import com.rc.panels.ContactsPanel;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpResponseListener;
+import com.rc.utils.EmojiUtil;
 import okhttp3.Headers;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -50,6 +51,10 @@ public class DataPullHelper
                 for (Object obj : memberList)
                 {
                     JSONObject member = (JSONObject) obj;
+
+                    System.out.println(member.getString("NickName"));
+
+
                     Contacts contacts = new Contacts();
                     contacts.setUsername(member.getString("UserName"));
                     contacts.setSex(member.getInt("Sex"));
@@ -59,11 +64,11 @@ public class DataPullHelper
                     contacts.setHeadImgUrl(member.getString("HeadImgUrl"));
                     contacts.setMemberCount(member.getInt("MemberCount"));
                     contacts.setCity(member.getString("City"));
-                    contacts.setNickName(member.getString("NickName"));
+                    contacts.setNickName(EmojiUtil.replaseEmoji(member.getString("NickName")));
                     contacts.setProvince(member.getString("Province"));
                     contacts.setSnsFlag(member.getInt("SnsFlag"));
                     contacts.setSignature(member.getString("Signature"));
-                    contacts.setRemarkName(member.getString("RemarkName"));
+                    contacts.setRemarkName(EmojiUtil.replaseEmoji(member.getString("RemarkName")));
                     contacts.setpYQuanPin(member.getString("PYQuanPin"));
                     contacts.setpYInitial(member.getString("PYInitial"));
                     contacts.setRemarkPYQuanPin(member.getString("RemarkPYQuanPin"));

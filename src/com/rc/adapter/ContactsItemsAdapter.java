@@ -158,7 +158,7 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
     {
         Collections.sort(contactsItems);
         //Collections.reverse(contactsItems);
-        Collections.sort(contactsItems, new Comparator<ContactsItem>()
+        /*Collections.sort(contactsItems, new Comparator<ContactsItem>()
         {
             @Override
             public int compare(ContactsItem o1, ContactsItem o2)
@@ -173,7 +173,7 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
 
                 return 0;
             }
-        });
+        });*/
 
         positionMap.clear();
 

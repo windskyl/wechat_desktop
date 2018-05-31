@@ -76,6 +76,6 @@ public class EmojiUtil
 
     public static void main(String[] args)
     {
-        System.out.println(replaseEmoji("<span class=\"emoji emoji1f63b\">asdasdsad<span class=\"emoji emoji1f63b\">"));
+        System.out.println(replaseEmoji("琪星云儿<span class=\"emoji emoji1f493\"></span>"));
     }
 }

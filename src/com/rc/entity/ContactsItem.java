@@ -60,11 +60,11 @@ public class ContactsItem implements Comparable<ContactsItem>
     @Override
     public int compareTo(ContactsItem o)
     {
-        String str = o.getpYQuanPin().substring(0, 1).toUpperCase();
+        String str = this.getpYQuanPin().substring(0, 1).toUpperCase();
         char ch = str.charAt(0);
         if (ch < 'A' || ch > 'Z')
         {
-            return 1;
+            return -1;
         }
         return this.getpYQuanPin().compareTo(o.getpYQuanPin());
     }
