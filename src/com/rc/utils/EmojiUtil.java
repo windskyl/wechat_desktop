@@ -3,7 +3,9 @@ package com.rc.utils;
 import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,8 +76,36 @@ public class EmojiUtil
     }
 
 
+    public static Map<String, String>  replaceEmoji2(String src)
+    {
+        String regx = "(\\.emoji([a-f,0-9]{1,5}),?)\\s*\\{\\s*background-position: 0 -(\\d+)px;\\s*\\}";
+
+        Pattern pattern = Pattern.compile(regx);
+        Matcher matcher = pattern.matcher(src);
+        Map<String, String> emojis = new HashMap<>();
+
+        while (matcher.find())
+        {
+            System.out.println(matcher.group(1));
+            //emojis.put(matcher.group(1), matcher.group(2));
+            //emojis.add(matcher.group(1));
+            //src = src.replaceAll(regx, matcher.group(1));
+        }
+
+        return emojis;
+    }
+
+
     public static void main(String[] args)
     {
-        System.out.println(replaceEmoji("❣愛丽˃̶͈̀ε˂̶͈́豬̤̮<span class=\"emoji emoji2728\"></span>"));
+        /*  .emoji1f52e,
+            .emoji1f52f {
+            background-position: 0 -5080px;
+            }*/
+
+        System.out.println(replaceEmoji2(".emoji1f52e,\n" +
+                ".emoji1f52f {\n" +
+                "    background-position: 0 -5080px;\n" +
+                "}"));
     }
 }
