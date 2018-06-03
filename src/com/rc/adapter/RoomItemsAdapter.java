@@ -59,9 +59,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         RoomItem item = roomItems.get(position);
         viewHolder.setTag(item.getUsername());
 
-        String title = item.getTitle().length() > 12 ? item.getTitle().substring(0, 12)
-                + "..." : item.getTitle();
-        viewHolder.roomName.setText(title);
+        viewHolder.roomName.setText(item.getTitle());
 
         // 获取头像
         AvatarUtil.getOrLoadUserAvatarAsync(item.getUsername(), item.getHeadImageUrl(), Launcher.currentUser,

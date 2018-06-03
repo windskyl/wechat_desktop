@@ -65,25 +65,11 @@ public class DataPullHelper
                     contacts.setMemberCount(member.getInt("MemberCount"));
                     contacts.setCity(member.getString("City"));
 
-                    List<String> emojis = EmojiUtil.extractEmojiClass(member.getString("NickName"));
-                    emojis.forEach(emoji ->
-                    {
-                        //System.out.println(emoji);
-                        try
-                        {
-                            ImageIO.write(EmojiUtil.getEmoji(emoji), "png", new FileOutputStream("C:\\Users\\song\\Desktop\\" + emoji + ".png"));
-                        } catch (IOException e)
-                        {
-                            e.printStackTrace();
-                        }
-
-                    });
-
-                    contacts.setNickName(EmojiUtil.replaceEmoji(member.getString("NickName")));
+                    contacts.setNickName(member.getString("NickName"));
                     contacts.setProvince(member.getString("Province"));
                     contacts.setSnsFlag(member.getInt("SnsFlag"));
                     contacts.setSignature(member.getString("Signature"));
-                    contacts.setRemarkName(EmojiUtil.replaceEmoji(member.getString("RemarkName")));
+                    contacts.setRemarkName(member.getString("RemarkName"));
                     contacts.setpYQuanPin(member.getString("PYQuanPin"));
                     contacts.setpYInitial(member.getString("PYInitial"));
                     contacts.setRemarkPYQuanPin(member.getString("RemarkPYQuanPin"));

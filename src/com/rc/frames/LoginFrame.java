@@ -584,11 +584,11 @@ public class LoginFrame extends JFrame
                 room.setHeadImgUrl(obj.getString("HeadImgUrl"));
                 room.setMemberCount(obj.getInt("MemberCount"));
                 room.setCity(obj.getString("City"));
-                room.setNickname(EmojiUtil.replaceEmoji(obj.getString("NickName")));
+                room.setNickname(obj.getString("NickName"));
                 room.setProvince(obj.getString("Province"));
                 room.setSnsFlag(obj.getInt("SnsFlag"));
-                room.setSignature(EmojiUtil.replaceEmoji(obj.getString("Signature")));
-                room.setRemarkName(EmojiUtil.replaceEmoji(obj.getString("RemarkName")));
+                room.setSignature(obj.getString("Signature"));
+                room.setRemarkName(obj.getString("RemarkName"));
                 roomService.insertOrUpdate(room);
             }
 

@@ -1,6 +1,8 @@
 package com.rc.utils;
 
 import com.rc.app.Launcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -24,6 +26,7 @@ public class EmojiUtil
 
     private static final Map<String, Integer> EMOJI_POS;
     private static BufferedImage EMOJIS;
+    private static Logger logger = LoggerFactory.getLogger(EmojiUtil.class);
 
     static
     {
@@ -786,45 +789,22 @@ public class EmojiUtil
         return emojis;
     }
 
-    public static String replaceEmoji(String src)
-    {
-        String regx = "<span class=\"emoji emoji([0-9a-z]{1,5})\">(</span>)*";
-        Pattern pattern = Pattern.compile(regx);
-        Matcher matcher = pattern.matcher(src);
-        List<String> emojis = new ArrayList<>();
 
-        while (matcher.find())
-        {
-            emojis.add(matcher.group(1));
-            src = src.replaceAll(regx, matcher.group(1));
-        }
-
-        return src;
-    }
-
-
-    public static Map<String, String> replaceEmoji2(String src)
-    {
-        String regx = "\\.emoji([a-f,0-9]{1,5})\\s*\\{\\s*background-position: 0 -(\\d+)px;\\s*\\}";
-
-        Pattern pattern = Pattern.compile(regx);
-        Matcher matcher = pattern.matcher(src);
-        Map<String, String> emojis = new HashMap<>();
-
-        while (matcher.find())
-        {
-            //System.out.println(matcher.group(1));
-            emojis.put(matcher.group(1), matcher.group(2));
-            //emojis.add(matcher.group(1));
-            //src = src.replaceAll(regx, matcher.group(1));
-        }
-
-        return emojis;
-    }
-
+    /**
+     * 获取emoji表情, 形式如  :a9:
+     * @param name
+     * @return
+     */
     public static BufferedImage getEmoji(String name)
     {
-        BufferedImage dest = EMOJIS.getSubimage(0, EMOJI_POS.get(name), 20, 20);
+        Integer  pos= EMOJI_POS.get(name.substring(1, name.length() - 1));
+        if (pos == null)
+        {
+            logger.error("无法获取emoji:" + name);
+            return null;
+        }
+
+        BufferedImage dest = EMOJIS.getSubimage(0, pos, 20, 20);
         return dest;
     }
 
