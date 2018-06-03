@@ -14,7 +14,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 专门从服务器拉取数据
@@ -60,6 +64,21 @@ public class DataPullHelper
                     contacts.setHeadImgUrl(member.getString("HeadImgUrl"));
                     contacts.setMemberCount(member.getInt("MemberCount"));
                     contacts.setCity(member.getString("City"));
+
+                    List<String> emojis = EmojiUtil.extractEmojiClass(member.getString("NickName"));
+                    emojis.forEach(emoji ->
+                    {
+                        //System.out.println(emoji);
+                        try
+                        {
+                            ImageIO.write(EmojiUtil.getEmoji(emoji), "png", new FileOutputStream("C:\\Users\\song\\Desktop\\" + emoji + ".png"));
+                        } catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    });
+
                     contacts.setNickName(EmojiUtil.replaceEmoji(member.getString("NickName")));
                     contacts.setProvince(member.getString("Province"));
                     contacts.setSnsFlag(member.getInt("SnsFlag"));
@@ -97,8 +116,7 @@ public class DataPullHelper
         } else if (username.startsWith("@"))
         {
             return "user";
-        }
-        else
+        } else
         {
             return "wx";
         }
