@@ -15,7 +15,8 @@ import java.io.FileOutputStream;
  */
 public class UpdateFrame extends JFrame
 {
-    private static final int FRAME_WIDTH = 650;
+    private static final long serialVersionUID = 1L;
+	private static final int FRAME_WIDTH = 650;
     private static final int FRAME_HEIGHT = 210;
     private static Point origin = new Point();
 
@@ -108,6 +109,7 @@ public class UpdateFrame extends JFrame
             {
                 updateResultListener.onSuccess();
             }
+            outputStream.close();
         }
         catch (Exception e)
         {

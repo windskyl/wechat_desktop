@@ -9,7 +9,10 @@ import java.awt.*;
  */
 public class RCProgressBar extends JProgressBar
 {
-    public RCProgressBar()
+    private static final long serialVersionUID = 1L;
+
+
+	public RCProgressBar()
     {
         setForeground(Colors.PROGRESS_BAR_START);
 

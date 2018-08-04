@@ -12,7 +12,8 @@ import java.io.*;
  */
 public class ImageViewerFrame extends JDialog
 {
-    private int minWidth;
+    private static final long serialVersionUID = 1L;
+	private int minWidth;
     private int minHeight;
 
     private int maxWidth;

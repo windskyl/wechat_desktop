@@ -22,7 +22,8 @@ import static com.rc.app.Launcher.roomService;
  */
 public class CreateGroupDialog extends JDialog
 {
-    private static CreateGroupDialog context;
+    private static final long serialVersionUID = 1L;
+	private static CreateGroupDialog context;
     private JPanel editorPanel;
     private RCTextField groupNameTextField;
     private JCheckBox privateCheckBox;

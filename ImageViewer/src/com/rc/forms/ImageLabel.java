@@ -12,7 +12,8 @@ import java.util.*;
  */
 public class ImageLabel extends JLabel
 {
-    private Image image;
+    private static final long serialVersionUID = 1L;
+	private Image image;
     private Image lastImage;
     private int xDistance = 0;
     private int yDistance = 0;
